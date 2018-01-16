@@ -74,7 +74,6 @@ public class MyTab extends Tab {
             file = new File(filePath);
         }
 
-
         if (file != null) {
             try {
                 FileWriter fileWriter = new FileWriter(file);
