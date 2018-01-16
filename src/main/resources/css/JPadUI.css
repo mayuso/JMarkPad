@@ -1,0 +1,20 @@
+/*JFOENIX*/
+
+.root {
+    -fx-font-family: Roboto;
+    src: "/resources/roboto/Roboto-Regular.ttf";
+}
+
+.jfx-decorator {
+    -fx-decorator-color: #ADD8E6;
+}
+.jfx-decorator .jfx-decorator-buttons-container {
+    -fx-background-color: -fx-decorator-color;
+}
+.jfx-decorator .resize-border {
+    -fx-border-color: -fx-decorator-color;
+    -fx-border-width: 0 4 4 4;
+}
+.menuBar{
+    -fx-background-color: #ADD8E6;
+}}
