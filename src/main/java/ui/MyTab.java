@@ -26,7 +26,7 @@ public class MyTab extends Tab {
     private static String doc;
     private static String css;
 
-    public boolean isSaved = false;
+    public boolean isSaved = true;
 
 
     MyTab(String name, ArrayList<MyTab> tabs) {
