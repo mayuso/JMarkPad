@@ -10,6 +10,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
@@ -22,6 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 
@@ -122,7 +125,15 @@ public class UI extends Application implements Initializable {
     @FXML
     public void closeClicked(ActionEvent ae) {
         if (!tabs.get(tabPane.getSelectionModel().getSelectedIndex()).isSaved) {
-            tabs.get(tabPane.getSelectionModel().getSelectedIndex()).saveFile();
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Save");
+            alert.setContentText("Save file " + tabs.get(tabPane.getSelectionModel().getSelectedIndex()).getText() + "?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                tabs.get(tabPane.getSelectionModel().getSelectedIndex()).saveFile();
+            }
+
         }
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
     }
