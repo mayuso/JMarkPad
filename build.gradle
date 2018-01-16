@@ -4,7 +4,6 @@ group 'JMarkPad'
 apply plugin: 'java'
 apply plugin: 'idea'
 
-
 buildscript {
     dependencies {
         classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
@@ -53,6 +52,7 @@ jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-class': 'ui.UI'
         )
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
