@@ -104,7 +104,7 @@ public class MyTab extends Tab {
             e.printStackTrace();
         }
     }
-    
+
     //Getters and setters
 
     public void setTextArea(JFXTextArea textArea) {
