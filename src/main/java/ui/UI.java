@@ -138,11 +138,21 @@ public class UI extends Application implements Initializable {
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
     }
 
-
-    @FXML
-
     @Override
     public void stop() {
+        for(MyTab tab: tabs){
+            if(!tab.isSaved){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Save");
+                alert.setContentText("Save file " + tab.getText() + "?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    tab.saveFile();
+                }
+
+            }
+        }
         //TODO Check if everything has been saved
         System.exit(0);
     }
