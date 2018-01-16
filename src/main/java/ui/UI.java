@@ -34,9 +34,9 @@ public class UI extends Application implements Initializable {
     @FXML
     private TabPane tabPane;
 
+    //private ArrayList<MyTab> tabs = new ArrayList();
 
-    private ArrayList<MyTab> tabs = new ArrayList();
-
+    static String receivedPath="";
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -62,7 +62,13 @@ public class UI extends Application implements Initializable {
             stage.show();
 
             tabPane.setTabClosingPolicy(JFXTabPane.TabClosingPolicy.ALL_TABS);
-            MyTab tab = new MyTab("New file", tabs);
+            MyTab tab;
+            if(!receivedPath.equals("")){
+                 tab = new MyTab(receivedPath, tabs);
+            }else{
+                tab = new MyTab("New file", tabs);
+            }
+
 
             tabPane.getTabs().add(tab);
         } catch (Exception e) {
@@ -70,7 +76,6 @@ public class UI extends Application implements Initializable {
         }
 
     }
-
 
 
     @Override
@@ -119,7 +124,7 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void saveClicked(ActionEvent ae) {
-        tabs.get(tabPane.getSelectionModel().getSelectedIndex()).saveFile();
+        tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex()).saveFile();
     }
 
     @FXML
@@ -140,8 +145,8 @@ public class UI extends Application implements Initializable {
 
     @Override
     public void stop() {
-        for(MyTab tab: tabs){
-            if(!tab.isSaved){
+        for (MyTab tab : tabs) {
+            if (!tab.isSaved) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Save");
                 alert.setContentText("Save file " + tab.getText() + "?");
@@ -155,6 +160,14 @@ public class UI extends Application implements Initializable {
         }
         //TODO Check if everything has been saved
         System.exit(0);
+    }
+
+
+    public static void main(String[] args) {
+        if (args.length > 0) {
+            receivedPath=args[0];
+        }
+        launch(args);
     }
 
 }

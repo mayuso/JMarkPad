@@ -63,7 +63,7 @@ apply plugin: 'javafx-gradle-plugin'
 jfx {
     deployDir = "src/main/deploy"
     // minimal requirement for jfxJar-task
-    mainClass = 'Main'
+    mainClass = 'ui.UI'
 
     // minimal requirement for jfxNative-task
     vendor = 'Mayuso'
