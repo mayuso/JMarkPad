@@ -21,20 +21,17 @@ public class MyTab extends Tab {
     private JFXTextArea textArea;
     private WebView webView;
     private SplitPane splitPane;
-    private ArrayList<MyTab> tabs;
 
-    private static String doc;
-    private static String css;
+    private String doc, css, filePath = "";
 
     public boolean isSaved = true;
 
 
-    MyTab(String name, ArrayList<MyTab> tabs) {
+    MyTab(String name) {
         super(name);
         doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
         css = getClass().getResource("/css/markdown.css").getPath();
-        tabs.add(this);
-        this.tabs = tabs;
+
 
         splitPane = new SplitPane();
         setTextArea(new JFXTextArea());
@@ -50,29 +47,33 @@ public class MyTab extends Tab {
     private void addListeners() {
 
         setOnCloseRequest(e -> {
+            if (!isSaved) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Save");
+                alert.setContentText("Save file " + getText() + "?");
 
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Save");
-            alert.setContentText("Save file " + getText() + "?");
-
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                saveFile();
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    saveFile();
+                }
             }
-
-            tabs.remove(getThis());
         });
 
 
     }
 
     public void saveFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
-        File file = fileChooser.showSaveDialog(new Stage());
+        File file;
+        if (filePath.equals("")) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
+            file = fileChooser.showSaveDialog(new Stage());
+        } else {
+            file = new File(filePath);
+        }
+
 
         if (file != null) {
             try {
@@ -80,13 +81,12 @@ public class MyTab extends Tab {
 
                 fileWriter.write(getTextArea().getText());
                 fileWriter.close();
+                filePath=file.getAbsolutePath();
+                setSaved(true);
+                setText(file.getName());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-            setText(file.getName());
-            setSaved(true);
-
-
         }
 
     }
@@ -97,6 +97,7 @@ public class MyTab extends Tab {
 
     private void reparse(String text) {
         try {
+            text=text.replace("\n", "\n\n");
             String textHtml = Processor.process(text);
             String html = String.format(doc, css, textHtml);
             webView.getEngine().loadContent(html, "text/html");
@@ -145,5 +146,13 @@ public class MyTab extends Tab {
             setText(getText().replace(" (*)", "") + " (*)");
         }
 
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
 }

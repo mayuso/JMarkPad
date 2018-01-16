@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +25,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -34,9 +36,9 @@ public class UI extends Application implements Initializable {
     @FXML
     private TabPane tabPane;
 
-    //private ArrayList<MyTab> tabs = new ArrayList();
 
-    static String receivedPath="";
+    private static String receivedPath = "";
+
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -63,12 +65,13 @@ public class UI extends Application implements Initializable {
 
             tabPane.setTabClosingPolicy(JFXTabPane.TabClosingPolicy.ALL_TABS);
             MyTab tab;
-            if(!receivedPath.equals("")){
-                 tab = new MyTab(receivedPath, tabs);
-            }else{
-                tab = new MyTab("New file", tabs);
+            if (!receivedPath.equals("")) {
+                tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1]);
+                openFileIntoTab(new File(receivedPath), tab);
+                tab.setFilePath(receivedPath);
+            } else {
+                tab = new MyTab("New file");
             }
-
 
             tabPane.getTabs().add(tab);
         } catch (Exception e) {
@@ -85,7 +88,7 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void newClicked(ActionEvent ae) {
-        MyTab tab = new MyTab("New file", tabs);
+        MyTab tab = new MyTab("New file");
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -101,42 +104,52 @@ public class UI extends Application implements Initializable {
         File file = fileChooser.showOpenDialog(stage);
         if (file != null) {
 
-            try {
-                BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-                String text;
+            MyTab tab = new MyTab(file.getName());
+            openFileIntoTab(file, tab);
 
-                JFXTextArea textArea = new JFXTextArea("");
-                while ((text = bufferedReader.readLine()) != null) {
-                    textArea.appendText(text + "\n");
-                }
-                bufferedReader.close();
-                MyTab tab = new MyTab(file.getName(), tabs);
-                tab.setTextArea(textArea);
-                tabPane.getTabs().add(tab);
-                tabPane.getSelectionModel().select(tab);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            tab.setFilePath(file.getAbsolutePath());
+
+
+            tabPane.getTabs().add(tab);
+            tabPane.getSelectionModel().select(tab);
+
 
         }
 
     }
 
+    private void openFileIntoTab(File file, MyTab tab) {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+            String text;
+
+            JFXTextArea textArea = new JFXTextArea("");
+            while ((text = bufferedReader.readLine()) != null) {
+                textArea.appendText(text + "\n");
+            }
+            bufferedReader.close();
+            tab.setTextArea(textArea);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @FXML
     public void saveClicked(ActionEvent ae) {
-        tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex()).saveFile();
+        ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).saveFile();
     }
 
     @FXML
     public void closeClicked(ActionEvent ae) {
-        if (!tabs.get(tabPane.getSelectionModel().getSelectedIndex()).isSaved) {
+
+        if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Save");
-            alert.setContentText("Save file " + tabs.get(tabPane.getSelectionModel().getSelectedIndex()).getText() + "?");
+            alert.setContentText("Save file " + tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex()).getText() + "?");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                tabs.get(tabPane.getSelectionModel().getSelectedIndex()).saveFile();
+                ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).saveFile();
             }
 
         }
@@ -145,7 +158,8 @@ public class UI extends Application implements Initializable {
 
     @Override
     public void stop() {
-        for (MyTab tab : tabs) {
+        for (int i = 0; i < tabPane.getTabs().size(); i++) {
+            MyTab tab = (MyTab) tabPane.getTabs().get(i);
             if (!tab.isSaved) {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Save");
@@ -157,7 +171,9 @@ public class UI extends Application implements Initializable {
                 }
 
             }
+
         }
+
         //TODO Check if everything has been saved
         System.exit(0);
     }
@@ -165,7 +181,7 @@ public class UI extends Application implements Initializable {
 
     public static void main(String[] args) {
         if (args.length > 0) {
-            receivedPath=args[0];
+            receivedPath = args[0];
         }
         launch(args);
     }
