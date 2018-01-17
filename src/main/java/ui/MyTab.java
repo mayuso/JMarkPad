@@ -7,8 +7,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.web.WebView;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import utilities.Utilities;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -28,8 +28,9 @@ public class MyTab extends Tab {
 
     MyTab(String name) {
         super(name);
+
         doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
-        css = getClass().getResource("/css/markdown.css").getPath();
+        css = "";
 
 
         splitPane = new SplitPane();
@@ -64,11 +65,7 @@ public class MyTab extends Tab {
     public void saveFile() {
         File file;
         if (filePath.equals("")) {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
-            file = fileChooser.showSaveDialog(new Stage());
+            file = Utilities.fileChooser.showSaveDialog(new Stage());
         } else {
             file = new File(filePath);
         }
@@ -89,10 +86,6 @@ public class MyTab extends Tab {
 
     }
 
-    private MyTab getThis() {
-        return this;
-    }
-
     private void reparse(String text) {
         try {
             text=text.replace("\n", "\n\n");
@@ -105,7 +98,7 @@ public class MyTab extends Tab {
     }
 
     //Getters and setters
-
+    @SuppressWarnings("unused")
     public void setTextArea(JFXTextArea textArea) {
         this.textArea = textArea;
         textArea.textProperty().addListener(o -> {
@@ -118,6 +111,7 @@ public class MyTab extends Tab {
         setContent(splitPane);
     }
 
+    @SuppressWarnings("unused")
     public void setWebView(WebView webView) {
         this.webView = webView;
 
@@ -128,14 +122,17 @@ public class MyTab extends Tab {
 
     }
 
+    @SuppressWarnings("unused")
     public JFXTextArea getTextArea() {
         return textArea;
     }
 
+    @SuppressWarnings("unused")
     public WebView getWebView() {
         return webView;
     }
 
+    @SuppressWarnings("unused")
     public void setSaved(boolean isSaved) {
         this.isSaved = isSaved;
         if (isSaved) {
@@ -146,10 +143,12 @@ public class MyTab extends Tab {
 
     }
 
+    @SuppressWarnings("unused")
     public String getFilePath() {
         return filePath;
     }
 
+    @SuppressWarnings("unused")
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }

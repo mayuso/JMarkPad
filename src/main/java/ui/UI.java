@@ -14,9 +14,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import utilities.Utilities;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,12 +33,13 @@ public class UI extends Application implements Initializable {
     @FXML
     private TabPane tabPane;
 
-
     private static String receivedPath = "";
 
     @Override
     public void start(Stage stage) {
         this.stage = stage;
+
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/JPadUI.fxml"));
             fxmlLoader.setController(this);
@@ -90,14 +91,10 @@ public class UI extends Application implements Initializable {
         tabPane.getSelectionModel().select(tab);
     }
 
-
     @FXML
     public void openClicked(ActionEvent ae) {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
-        File file = fileChooser.showOpenDialog(stage);
+
+        File file = Utilities.fileChooser.showOpenDialog(stage);
         if (file != null) {
 
             MyTab tab = new MyTab(file.getName());
@@ -105,11 +102,8 @@ public class UI extends Application implements Initializable {
 
             tab.setFilePath(file.getAbsolutePath());
 
-
             tabPane.getTabs().add(tab);
             tabPane.getSelectionModel().select(tab);
-
-
         }
 
     }
