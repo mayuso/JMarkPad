@@ -4,7 +4,6 @@ import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,8 +23,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -51,7 +48,7 @@ public class UI extends Application implements Initializable {
 
             decorator.setCustomMaximize(true);
             Scene scene = new Scene(decorator, 800, 600);
-
+            //Scene scene = new Scene(root);
 
             scene.getStylesheets().add("/css/JPadUI.css");
             stage.initStyle(StageStyle.UNDECORATED);
@@ -74,6 +71,7 @@ public class UI extends Application implements Initializable {
             }
 
             tabPane.getTabs().add(tab);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -167,9 +165,7 @@ public class UI extends Application implements Initializable {
                 if (result.get() == ButtonType.OK) {
                     tab.saveFile();
                 }
-
             }
-
         }
 
         //TODO Check if everything has been saved
