@@ -4,7 +4,6 @@ module app {
     requires com.jfoenix;
     requires javafx.web;
     requires javafx.fxml;
-    //requires txtmark;
 
     exports ui;
 }
