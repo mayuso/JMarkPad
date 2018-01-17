@@ -40,26 +40,28 @@ public class MyTab extends Tab {
         addListeners();
 
         setContent(splitPane);
-
-
     }
 
     private void addListeners() {
 
         setOnCloseRequest(e -> {
-            if (!isSaved) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Save");
-                alert.setContentText("Save file " + getText() + "?");
-
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    saveFile();
-                }
-            }
+            checkIfUserWantsToSaveFile();
         });
 
 
+    }
+
+    public void checkIfUserWantsToSaveFile() {
+        if (!isSaved) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Save");
+            alert.setContentText("Save file " + getText() + "?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                saveFile();
+            }
+        }
     }
 
     public void saveFile() {
@@ -105,8 +107,11 @@ public class MyTab extends Tab {
             reparse(textArea.getText());
             setSaved(false);
         });
-        splitPane.getItems().clear();
-        splitPane.getItems().addAll(textArea, webView);
+        //splitPane.getItems().clear();
+        if(splitPane.getItems().size()>1) {
+            splitPane.getItems().remove(0);
+        }
+        splitPane.getItems().add(0,textArea);
 
         setContent(splitPane);
     }
@@ -115,8 +120,11 @@ public class MyTab extends Tab {
     public void setWebView(WebView webView) {
         this.webView = webView;
 
-        splitPane.getItems().clear();
-        splitPane.getItems().addAll(textArea, webView);
+        //splitPane.getItems().clear();
+        if(splitPane.getItems().size()>1) {
+            splitPane.getItems().remove(1);
+        }
+        splitPane.getItems().add(1, webView);
 
         setContent(splitPane);
 

@@ -133,15 +133,7 @@ public class UI extends Application implements Initializable {
     public void closeClicked(ActionEvent ae) {
 
         if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Save");
-            alert.setContentText("Save file " + tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex()).getText() + "?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).saveFile();
-            }
-
+            ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
         }
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
     }
@@ -151,14 +143,7 @@ public class UI extends Application implements Initializable {
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
             MyTab tab = (MyTab) tabPane.getTabs().get(i);
             if (!tab.isSaved) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Save");
-                alert.setContentText("Save file " + tab.getText() + "?");
-
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    tab.saveFile();
-                }
+                tab.checkIfUserWantsToSaveFile();
             }
         }
 
