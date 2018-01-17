@@ -1,6 +1,5 @@
 package ui;
 
-import com.github.rjeschke.txtmark.Processor;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -84,7 +83,7 @@ public class MyTab extends Tab {
     private void reparse(String text) {
         try {
             text=text.replace("\n", "\n\n");
-            String textHtml = Processor.process(text);
+            String textHtml = text;
             String doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
             String css= "";
             String html = String.format(doc, css, textHtml);

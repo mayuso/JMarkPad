@@ -1,2 +1,6 @@
 rootProject.name = 'JMarkPad'
+include 'JMarkPad_gui'
+include 'libs'
+include 'txtmark'
+include 'app'
 
