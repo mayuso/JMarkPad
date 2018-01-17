@@ -1,9 +1,5 @@
 /*JFOENIX*/
 
-.root {
-    -fx-font-family: Roboto;
-    src: "/resources/roboto/Roboto-Regular.ttf";
-}
 
 .jfx-decorator {
     -fx-decorator-color: #ADD8E6;
