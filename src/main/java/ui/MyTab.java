@@ -21,17 +21,12 @@ public class MyTab extends Tab {
     private WebView webView;
     private SplitPane splitPane;
 
-    private String doc, css, filePath = "";
+    private String filePath = "";
 
     public boolean isSaved = true;
 
-
     MyTab(String name) {
         super(name);
-
-        doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
-        css = "";
-
 
         splitPane = new SplitPane();
         setTextArea(new JFXTextArea());
@@ -44,9 +39,7 @@ public class MyTab extends Tab {
 
     private void addListeners() {
 
-        setOnCloseRequest(e -> {
-            checkIfUserWantsToSaveFile();
-        });
+        setOnCloseRequest(e -> checkIfUserWantsToSaveFile());
 
 
     }
@@ -92,6 +85,8 @@ public class MyTab extends Tab {
         try {
             text=text.replace("\n", "\n\n");
             String textHtml = Processor.process(text);
+            String doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
+            String css= "";
             String html = String.format(doc, css, textHtml);
             webView.getEngine().loadContent(html, "text/html");
         } catch (Exception e) {
