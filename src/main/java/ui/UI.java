@@ -10,7 +10,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -46,7 +45,6 @@ public class UI extends Application implements Initializable {
 
             decorator.setCustomMaximize(true);
             Scene scene = new Scene(decorator, 800, 600);
-            //Scene scene = new Scene(root);
 
             scene.getStylesheets().add("/css/JPadUI.css");
             stage.initStyle(StageStyle.UNDECORATED);
