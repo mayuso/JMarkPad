@@ -28,7 +28,7 @@ public class UI extends Application implements Initializable {
 
     private Stage stage;
     @FXML
-    private TabPane tabPane;
+    private JFXTabPane tabPane;
 
     private static String receivedPath = "";
 

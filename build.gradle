@@ -1,10 +1,70 @@
-task cleanAll(type: GradleBuild) {
-    tasks = ['app:clean']
+group 'JMarkPad'
+
+// Apply the java plugin to add support for Java
+apply plugin: 'java'
+apply plugin: 'idea'
+
+buildscript {
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+    repositories {
+        mavenLocal()
+        mavenCentral()
+
+    }
+}
+repositories {
+
+    jcenter()
+    mavenCentral()
+
 }
 
-task linkAll(type: GradleBuild) {
-    tasks = ['app:link']
+dependencies {
+
+    // Use JUnit test framework
+    testCompile 'junit:junit:4.12'
+
+// https://mvnrepository.com/artifact/org.controlsfx/controlsfx
+    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
+
+    // https://mvnrepository.com/artifact/com.github.rjeschke/txtmark
+    compile group: 'com.github.rjeschke', name: 'txtmark', version: '0.13'
+    // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
+    compile group: 'com.jfoenix', name: 'jfoenix', version: '1.10.0'
+
 }
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.4.1'
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java"]
+        }
+        resources {
+            srcDirs = ["src/main/resources"]
+            includes = ["**/*.fxml", "**/*.css"]
+            includes = []
+        }
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-class': 'ui.UI'
+        )
+    }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    baseName = project.name
+}
+apply plugin: 'javafx-gradle-plugin'
+
+jfx {
+    deployDir = "src/main/deploy"
+    // minimal requirement for jfxJar-task
+    mainClass = 'ui.UI'
+
+    // minimal requirement for jfxNative-task
+    vendor = 'Mayuso'
 }
