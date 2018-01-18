@@ -1,8 +1,12 @@
 group 'JMarkPad'
 version '2.1.1'
 apply plugin: 'java'
+apply plugin: 'application'
 
 sourceCompatibility = 1.9
+
+mainClassName = "ui.UI"
+
 
 
 repositories {
@@ -17,21 +21,11 @@ dependencies {
 
     // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
     compile group: 'com.jfoenix', name: 'jfoenix', version: '9.0.1'
-
+    // https://mvnrepository.com/artifact/com.github.rjeschke/txtmark
+    compile group: 'com.github.rjeschke', name: 'txtmark', version: '0.13'
 
 }
-sourceSets {
-    main {
-        java {
-            srcDirs = ["src/main/java"]
-        }
-        resources {
-            srcDirs = ["src/main/resources"]
-            includes = ["**/*.fxml", "**/*.css"]
-            includes = []
-        }
-    }
-}
+
 ext.moduleName = 'com.jfoenix'
 compileJava {
     inputs.property("moduleName", moduleName)

@@ -13,6 +13,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
+import com.github.rjeschke.txtmark.Processor;
+
 
 public class MyTab extends Tab {
 
@@ -83,7 +85,8 @@ public class MyTab extends Tab {
     private void reparse(String text) {
         try {
             text=text.replace("\n", "\n\n");
-            String textHtml = text;
+            String textHtml = Processor.process(text);
+
             String doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
             String css= "";
             String html = String.format(doc, css, textHtml);
