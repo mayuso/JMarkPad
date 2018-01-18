@@ -21,6 +21,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
+                  <MenuItem mnemonicParsing="false" text="Markdown help (*)" />
               <MenuItem mnemonicParsing="false" text="About (*)" />
             </items>
           </Menu>

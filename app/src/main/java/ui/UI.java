@@ -93,7 +93,13 @@ public class UI extends Application implements Initializable {
 
         File file = Utilities.fileChooser.showOpenDialog(stage);
         if (file != null) {
-
+            for (int i = 0; i < tabPane.getTabs().size(); i++) {
+                MyTab currentlyOpenTab = (MyTab) tabPane.getTabs().get(i);
+                if (currentlyOpenTab.getFilePath().equals(file.getAbsolutePath())) {
+                    tabPane.getSelectionModel().select(i);
+                    return;
+                }
+            }
             MyTab tab = new MyTab(file.getName());
             openFileIntoTab(file, tab);
 
