@@ -65,7 +65,7 @@ public class UI extends Application implements Initializable {
                 openFileIntoTab(new File(receivedPath), tab);
                 tab.setFilePath(receivedPath);
             } else {
-                tab = new MyTab("New file");
+                tab = new MyTab("New 1");
             }
 
             tabPane.getTabs().add(tab);
@@ -82,7 +82,25 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void newClicked(ActionEvent ae) {
-        MyTab tab = new MyTab("New file");
+        String newFileName = "";
+        int counter = 1;
+        boolean usedName = false;
+        while (newFileName.equals("") ) {
+            usedName = false;
+            for (int i = 0; i < tabPane.getTabs().size(); i++) {
+                if (tabPane.getTabs().get(i).getText().equals("New " + counter)) {
+                    usedName = true;
+                    i = tabPane.getTabs().size();
+                }
+            }
+            if (!usedName) {
+                newFileName = "New " + counter;
+            }
+            counter++;
+        }
+
+
+        MyTab tab = new MyTab(newFileName);
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -93,13 +111,10 @@ public class UI extends Application implements Initializable {
 
         File file = Utilities.fileChooser.showOpenDialog(stage);
         if (file != null) {
-            for (int i = 0; i < tabPane.getTabs().size(); i++) {
-                MyTab currentlyOpenTab = (MyTab) tabPane.getTabs().get(i);
-                if (currentlyOpenTab.getFilePath().equals(file.getAbsolutePath())) {
-                    tabPane.getSelectionModel().select(i);
-                    return;
-                }
+            if (isFileIsAlreadyOpen(file.getAbsolutePath())) {
+                return;
             }
+
             MyTab tab = new MyTab(file.getName());
             openFileIntoTab(file, tab);
 
@@ -110,6 +125,19 @@ public class UI extends Application implements Initializable {
         }
 
     }
+
+    private boolean isFileIsAlreadyOpen(String filePath) {
+        boolean result = false;
+        for (int i = 0; i < tabPane.getTabs().size(); i++) {
+            MyTab currentlyOpenTab = (MyTab) tabPane.getTabs().get(i);
+            if (currentlyOpenTab.getFilePath().equals(filePath)) {
+                tabPane.getSelectionModel().select(i);
+                result = true;
+            }
+        }
+        return result;
+    }
+
 
     private void openFileIntoTab(File file, MyTab tab) {
         try {
