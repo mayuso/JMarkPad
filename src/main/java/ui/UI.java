@@ -83,7 +83,7 @@ public class UI extends Application implements Initializable {
         String newFileName = "";
         int counter = 1;
         boolean usedName = false;
-        while (newFileName.equals("") ) {
+        while (newFileName.equals("")) {
             usedName = false;
             for (int i = 0; i < tabPane.getTabs().size(); i++) {
                 if (tabPane.getTabs().get(i).getText().equals("New " + counter)) {
@@ -156,6 +156,13 @@ public class UI extends Application implements Initializable {
     @FXML
     public void saveClicked(ActionEvent ae) {
         ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).saveFile();
+    }
+
+    @FXML
+    public void saveAllClicked(ActionEvent ae) {
+        for (int i = 0; i < tabPane.getTabs().size(); i++) {
+            ((MyTab) tabPane.getTabs().get(i)).saveFile();
+        }
     }
 
     @FXML
