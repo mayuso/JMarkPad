@@ -39,10 +39,7 @@ public class MyTab extends Tab {
     }
 
     private void addListeners() {
-
         setOnCloseRequest(e -> checkIfUserWantsToSaveFile());
-
-
     }
 
     public void checkIfUserWantsToSaveFile() {

@@ -7,18 +7,18 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../../css/ui.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.162">
+<GridPane fx:id="gridPane" stylesheets="@../../css/ui.css" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
       <ColumnConstraints halignment="CENTER" prefWidth="150.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints prefHeight="30.0" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+    <RowConstraints prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <Label text="Color theme:" />
-      <JFXButton fx:id="backButton" text="Back" GridPane.rowIndex="2" />
+      <JFXButton fx:id="backButton" style="-fx-background-color: #AAAAAA;" text="Back" GridPane.rowIndex="2" />
       <JFXColorPicker fx:id="colorPicker" GridPane.rowIndex="1" />
    </children>
 </GridPane>

@@ -13,11 +13,11 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ui.panes.OptionsPane;
 import utilities.Utilities;
-
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,10 +39,11 @@ public class UI extends Application implements Initializable {
 
     private static String receivedPath = "";
     public JFXDrawer optionsDrawer;
+    OptionsPane optionsPane;
 
-
-    public String colorTheme="#ADD8E6";
+    public Color colorTheme;
     public JFXDecorator decorator;
+
     @Override
     public void start(Stage stage) {
         this.stage = stage;
@@ -50,8 +51,8 @@ public class UI extends Application implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/JMarkPad.fxml"));
             fxmlLoader.setController(this);
-
             Parent root = (Region) fxmlLoader.load();
+
             decorator = new JFXDecorator(stage, root);
 
             decorator.setCustomMaximize(true);
@@ -65,8 +66,10 @@ public class UI extends Application implements Initializable {
             stage.setMinHeight(600);
             stage.setScene(scene);
 
+            loadXMLValues();
             loadDrawers();
 
+            refreshTheme();
             stage.show();
 
             tabPane.setTabClosingPolicy(JFXTabPane.TabClosingPolicy.ALL_TABS);
@@ -76,6 +79,7 @@ public class UI extends Application implements Initializable {
                 openFileIntoTab(new File(receivedPath), tab);
                 tab.setFilePath(receivedPath);
             } else {
+                //TODO only create new tab if loadXMLValues find no open files
                 tab = new MyTab("New 1");
             }
 
@@ -86,15 +90,22 @@ public class UI extends Application implements Initializable {
         }
     }
 
+    private void loadXMLValues() {
+        //TODO Actual XML
+
+        colorTheme= new Color((double)173/255,(double)216/255,(double)230/255,1);
+
+    }
+
     private void loadDrawers() {
 
         drawersStack.setMouseTransparent(true);
-
+        optionsPane = new OptionsPane(this);
         FlowPane content = new FlowPane();
         optionsDrawer = new JFXDrawer();
         StackPane optionsDrawerPane = new StackPane();
 
-        optionsDrawerPane.getChildren().add(new OptionsPane(this));
+        optionsDrawerPane.getChildren().add(optionsPane);
         optionsDrawer.setDirection(DrawerDirection.RIGHT);
         optionsDrawer.setSidePane(optionsDrawerPane);
         optionsDrawer.setDefaultDrawerSize(150);
@@ -103,7 +114,7 @@ public class UI extends Application implements Initializable {
 
 
         drawersStack.setContent(content);
-        
+
     }
 
     @Override
@@ -115,7 +126,7 @@ public class UI extends Application implements Initializable {
     public void newClicked(ActionEvent ae) {
         String newFileName = "";
         int counter = 1;
-        boolean usedName = false;
+        boolean usedName;
         while (newFileName.equals("")) {
             usedName = false;
             for (int i = 0; i < tabPane.getTabs().size(); i++) {
@@ -218,14 +229,13 @@ public class UI extends Application implements Initializable {
 
     @Override
     public void stop() {
-        //TODO Move this to stage close listener
+
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
             MyTab tab = (MyTab) tabPane.getTabs().get(i);
             if (!tab.isSaved) {
                 tab.checkIfUserWantsToSaveFile();
             }
         }
-
         System.exit(0);
     }
 
@@ -238,7 +248,16 @@ public class UI extends Application implements Initializable {
     }
 
     public void refreshTheme() {
-        decorator.setStyle("-fx-decorator-color: "+colorTheme+";");
-        menuBar.setStyle("-fx-background-color: "+colorTheme+";");
+        String colorThemeString = toRGB(colorTheme);
+
+        decorator.setStyle("-fx-decorator-color: " + colorThemeString + ";");
+        menuBar.setStyle("-fx-background-color: " + colorThemeString + ";");
+    }
+
+    public static String toRGB(Color color) {
+        return String.format("#%02X%02X%02X",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
     }
 }
