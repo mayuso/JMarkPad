@@ -1,8 +1,7 @@
 package ui;
 
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.*;
+import com.jfoenix.controls.JFXDrawer.DrawerDirection;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,10 +9,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import ui.panes.OptionsPane;
 import utilities.Utilities;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,32 +31,41 @@ public class UI extends Application implements Initializable {
 
     private Stage stage;
     @FXML
-    private JFXTabPane tabPane;
+    public JFXDrawersStack drawersStack;
+    @FXML
+    public JFXTabPane tabPane;
+    @FXML
+    public MenuBar menuBar;
 
     private static String receivedPath = "";
+    public JFXDrawer optionsDrawer;
 
+
+    public String colorTheme="#ADD8E6";
+    public JFXDecorator decorator;
     @Override
     public void start(Stage stage) {
         this.stage = stage;
 
-
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/JPadUI.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/JMarkPad.fxml"));
             fxmlLoader.setController(this);
 
             Parent root = (Region) fxmlLoader.load();
-            JFXDecorator decorator = new JFXDecorator(stage, root);
+            decorator = new JFXDecorator(stage, root);
 
             decorator.setCustomMaximize(true);
             Scene scene = new Scene(decorator, 800, 600);
 
-            scene.getStylesheets().add("/css/JPadUI.css");
+            scene.getStylesheets().add("/css/ui.css");
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(true);
 
             stage.setMinWidth(800);
             stage.setMinHeight(600);
             stage.setScene(scene);
+
+            loadDrawers();
 
             stage.show();
 
@@ -71,6 +84,26 @@ public class UI extends Application implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void loadDrawers() {
+
+        drawersStack.setMouseTransparent(true);
+
+        FlowPane content = new FlowPane();
+        optionsDrawer = new JFXDrawer();
+        StackPane optionsDrawerPane = new StackPane();
+
+        optionsDrawerPane.getChildren().add(new OptionsPane(this));
+        optionsDrawer.setDirection(DrawerDirection.RIGHT);
+        optionsDrawer.setSidePane(optionsDrawerPane);
+        optionsDrawer.setDefaultDrawerSize(150);
+        optionsDrawer.setOverLayVisible(false);
+        optionsDrawer.setResizableOnDrag(true);
+
+
+        drawersStack.setContent(content);
+        
     }
 
     @Override
@@ -124,6 +157,15 @@ public class UI extends Application implements Initializable {
 
     }
 
+    @FXML
+    public void colorThemeClicked(ActionEvent ae) {
+        // TODO Make this a button, not a MenuItem
+        drawersStack.toggle(optionsDrawer);
+        drawersStack.setMouseTransparent(false);
+
+    }
+
+
     private boolean isFileIsAlreadyOpen(String filePath) {
         boolean result = false;
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
@@ -176,6 +218,7 @@ public class UI extends Application implements Initializable {
 
     @Override
     public void stop() {
+        //TODO Move this to stage close listener
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
             MyTab tab = (MyTab) tabPane.getTabs().get(i);
             if (!tab.isSaved) {
@@ -183,7 +226,6 @@ public class UI extends Application implements Initializable {
             }
         }
 
-        //TODO Check if everything has been saved
         System.exit(0);
     }
 
@@ -195,4 +237,8 @@ public class UI extends Application implements Initializable {
         launch(args);
     }
 
+    public void refreshTheme() {
+        decorator.setStyle("-fx-decorator-color: "+colorTheme+";");
+        menuBar.setStyle("-fx-background-color: "+colorTheme+";");
+    }
 }
