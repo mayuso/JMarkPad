@@ -67,3 +67,8 @@ jfx {
     // minimal requirement for jfxNative-task
     vendor = 'Mayuso'
 }
+
+task copyLibs(type: Copy) {
+    from configurations.runtime
+    into 'build/deps'
+}
