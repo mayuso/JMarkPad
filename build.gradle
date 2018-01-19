@@ -26,13 +26,10 @@ dependencies {
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 
-// https://mvnrepository.com/artifact/org.controlsfx/controlsfx
-    compile group: 'org.controlsfx', name: 'controlsfx', version: '8.40.14'
-
     // https://mvnrepository.com/artifact/com.github.rjeschke/txtmark
     compile group: 'com.github.rjeschke', name: 'txtmark', version: '0.13'
     // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
-    compile group: 'com.jfoenix', name: 'jfoenix', version: '1.10.0'
+    compile group: 'com.jfoenix', name: 'jfoenix', version: '8.0.1'
 
 }
 sourceSets {
