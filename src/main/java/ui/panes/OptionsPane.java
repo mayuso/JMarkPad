@@ -2,7 +2,6 @@ package ui.panes;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXColorPicker;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +24,7 @@ public class OptionsPane extends StackPane {
     public OptionsPane(UI ui) {
 
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/panes/OptionsPane.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource( "/ui/fxml/panes/OptionsPane.fxml" ));
             fxmlLoader.setController(this);
             Parent root = (Region) fxmlLoader.load();
             getStylesheets().add("/css/ui.css");
