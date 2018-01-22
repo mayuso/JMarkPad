@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-
 <BorderPane prefHeight="200.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <MenuBar fx:id="menuBar" styleClass="menuBar" BorderPane.alignment="CENTER">
@@ -20,7 +19,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save" />
-                  <MenuItem mnemonicParsing="false" text="Save As... (*)" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As... (*)" />
                   <MenuItem mnemonicParsing="false" onAction="#saveAllClicked" text="Save All" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close" />

@@ -65,7 +65,7 @@ public class UI extends Application implements Initializable {
             stage.setMinWidth(800);
             stage.setMinHeight(600);
             stage.setScene(scene);
-
+            new Utilities();
             loadXMLValues();
             loadDrawers();
 
@@ -93,7 +93,7 @@ public class UI extends Application implements Initializable {
     private void loadXMLValues() {
         //TODO Actual XML
 
-        colorTheme= new Color((double)173/255,(double)216/255,(double)230/255,1);
+        colorTheme = new Color((double) 173 / 255, (double) 216 / 255, (double) 230 / 255, 1);
 
     }
 
@@ -208,15 +208,23 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void saveClicked(ActionEvent ae) {
-        ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).saveFile();
+        ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
     }
 
     @FXML
     public void saveAllClicked(ActionEvent ae) {
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).saveFile();
+            ((MyTab) tabPane.getTabs().get(i)).checkSaveInCurrentPath();
         }
     }
+
+    @FXML
+    public void saveAsClicked(ActionEvent ae) {
+        for (int i = 0; i < tabPane.getTabs().size(); i++) {
+            ((MyTab) tabPane.getTabs().get(i)).saveAs();
+        }
+    }
+
 
     @FXML
     public void closeClicked(ActionEvent ae) {

@@ -1,5 +1,6 @@
 package ui;
 
+import com.github.rjeschke.txtmark.Processor;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -13,7 +14,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
-import com.github.rjeschke.txtmark.Processor;
 
 
 public class MyTab extends Tab {
@@ -50,42 +50,51 @@ public class MyTab extends Tab {
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
-                saveFile();
+                checkSaveInCurrentPath();
             }
         }
     }
 
-    public void saveFile() {
+
+    public void checkSaveInCurrentPath() {
         File file;
         if (filePath.equals("")) {
             file = Utilities.fileChooser.showSaveDialog(new Stage());
         } else {
             file = new File(filePath);
         }
+        save(file);
 
+    }
+
+    public void saveAs() {
+        File file = Utilities.fileChooser.showSaveDialog(new Stage());
+        save(file);
+
+    }
+    private void save(File file){
         if (file != null) {
             try {
                 FileWriter fileWriter = new FileWriter(file);
 
                 fileWriter.write(getTextArea().getText());
                 fileWriter.close();
-                filePath=file.getAbsolutePath();
+                filePath = file.getAbsolutePath();
                 setSaved(true);
                 setText(file.getName());
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
         }
-
     }
 
     private void reparse(String text) {
         try {
-            text=text.replace("\n", "\n\n");
+            text = text.replace("\n", "\n\n");
             String textHtml = Processor.process(text);
 
             String doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
-            String css= "";
+            String css = "";
             String html = String.format(doc, css, textHtml);
             webView.getEngine().loadContent(html, "text/html");
         } catch (Exception e) {
@@ -102,10 +111,10 @@ public class MyTab extends Tab {
             setSaved(false);
         });
         //splitPane.getItems().clear();
-        if(splitPane.getItems().size()>1) {
+        if (splitPane.getItems().size() > 1) {
             splitPane.getItems().remove(0);
         }
-        splitPane.getItems().add(0,textArea);
+        splitPane.getItems().add(0, textArea);
 
         setContent(splitPane);
     }
@@ -115,7 +124,7 @@ public class MyTab extends Tab {
         this.webView = webView;
 
         //splitPane.getItems().clear();
-        if(splitPane.getItems().size()>1) {
+        if (splitPane.getItems().size() > 1) {
             splitPane.getItems().remove(1);
         }
         splitPane.getItems().add(1, webView);
