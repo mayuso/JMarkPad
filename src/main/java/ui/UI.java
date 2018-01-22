@@ -81,13 +81,16 @@ public class UI extends Application implements Initializable {
                     tab.setFilePath(receivedPath);
                 } catch (FileNotFoundException e) {
                 }
-
+                tabPane.getTabs().add(tab);
             } else {
-                //TODO only create new tab if loadXMLValues find no open files
-                tab = new MyTab("New 1");
+
+                if (tabPane.getTabs().size() < 1) {
+                    tab = new MyTab("New 1");
+                    tabPane.getTabs().add(tab);
+                }
+
             }
 
-            tabPane.getTabs().add(tab);
 
         } catch (IOException e) {
             e.printStackTrace();
