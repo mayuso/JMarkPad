@@ -19,23 +19,22 @@
                   <MenuItem mnemonicParsing="false" onAction="#openClicked" text="Open" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save" />
-                  <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As... (*)" />
+                  <MenuItem mnemonicParsing="false" onAction="#saveAsClicked" text="Save As..." />
                   <MenuItem mnemonicParsing="false" onAction="#saveAllClicked" text="Save All" />
                   <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem mnemonicParsing="false" onAction="#closeClicked" text="Close" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Options">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#optionsClicked" text="Options" />
+               </items></Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
                   <MenuItem mnemonicParsing="false" text="Markdown help (*)" />
               <MenuItem mnemonicParsing="false" text="About (*)" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Options">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#colorThemeClicked" text="Color theme" />
-              </items>
-            </Menu>
         </menus>
       </MenuBar>
    </top>

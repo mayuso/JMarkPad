@@ -2,7 +2,6 @@ package ui.panes;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXColorPicker;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,7 +44,7 @@ public class OptionsPane extends StackPane {
     }
 
     private void addListeners(UI ui) {
-        colorPicker.setOnAction((EventHandler) t -> {
+        colorPicker.setOnAction(t -> {
             ui.colorTheme = colorPicker.getValue();
             ui.refreshTheme();
         });

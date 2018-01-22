@@ -2,6 +2,7 @@ package ui;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
+import io.XML;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,13 +17,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.xml.sax.SAXException;
 import ui.panes.OptionsPane;
 import utilities.Utilities;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -76,8 +76,12 @@ public class UI extends Application implements Initializable {
             MyTab tab;
             if (!receivedPath.equals("")) {
                 tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1]);
-                openFileIntoTab(new File(receivedPath), tab);
-                tab.setFilePath(receivedPath);
+                try {
+                    openFileIntoTab(new File(receivedPath), tab);
+                    tab.setFilePath(receivedPath);
+                } catch (FileNotFoundException e) {
+                }
+
             } else {
                 //TODO only create new tab if loadXMLValues find no open files
                 tab = new MyTab("New 1");
@@ -85,15 +89,44 @@ public class UI extends Application implements Initializable {
 
             tabPane.getTabs().add(tab);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void loadXMLValues() {
-        //TODO Actual XML
+        try {
+            XML xml = new XML("config.xml");
+            stage.setX(Double.valueOf(xml.loadVariable("posX")));
+            stage.setY(Double.valueOf(xml.loadVariable("posY")));
+            stage.setWidth(Double.valueOf(xml.loadVariable("width")));
+            stage.setHeight(Double.valueOf(xml.loadVariable("height")));
+            colorTheme = new Color(Double.valueOf(xml.loadVariable("red")),
+                    Double.valueOf(xml.loadVariable("green")),
+                    Double.valueOf(xml.loadVariable("blue")), 1);
 
-        colorTheme = new Color((double) 173 / 255, (double) 216 / 255, (double) 230 / 255, 1);
+            for (String path : xml.loadVariables("file")) {
+                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1]);
+                File file = new File(path);
+                try {
+                    openFileIntoTab(file, tab);
+
+                    tab.setFilePath(file.getAbsolutePath());
+
+                    tabPane.getTabs().add(tab);
+                    tabPane.getSelectionModel().select(tab);
+                } catch (FileNotFoundException e) {
+
+                }
+            }
+
+            new File("config.xml").delete();
+        } catch (SAXException | NullPointerException | IOException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+
+
 
     }
 
@@ -158,19 +191,23 @@ public class UI extends Application implements Initializable {
             }
 
             MyTab tab = new MyTab(file.getName());
-            openFileIntoTab(file, tab);
+            try {
+                openFileIntoTab(file, tab);
+                tab.setFilePath(file.getAbsolutePath());
 
-            tab.setFilePath(file.getAbsolutePath());
+                tabPane.getTabs().add(tab);
+                tabPane.getSelectionModel().select(tab);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            tabPane.getTabs().add(tab);
-            tabPane.getSelectionModel().select(tab);
+
         }
 
     }
 
     @FXML
-    public void colorThemeClicked(ActionEvent ae) {
-        // TODO Make this a button, not a MenuItem
+    public void optionsClicked(ActionEvent ae) {
         drawersStack.toggle(optionsDrawer);
         drawersStack.setMouseTransparent(false);
 
@@ -190,20 +227,18 @@ public class UI extends Application implements Initializable {
     }
 
 
-    private void openFileIntoTab(File file, MyTab tab) {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-            String text;
+    private void openFileIntoTab(File file, MyTab tab) throws IOException {
 
-            JFXTextArea textArea = new JFXTextArea("");
-            while ((text = bufferedReader.readLine()) != null) {
-                textArea.appendText(text + "\n");
-            }
-            bufferedReader.close();
-            tab.setTextArea(textArea);
-        } catch (IOException e) {
-            e.printStackTrace();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+        String text;
+
+        JFXTextArea textArea = new JFXTextArea("");
+        while ((text = bufferedReader.readLine()) != null) {
+            textArea.appendText(text + "\n");
         }
+        bufferedReader.close();
+        tab.setTextArea(textArea);
+
     }
 
     @FXML
@@ -237,13 +272,28 @@ public class UI extends Application implements Initializable {
 
     @Override
     public void stop() {
+        String[] filePaths = new String[tabPane.getTabs().size()];
+
 
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
             MyTab tab = (MyTab) tabPane.getTabs().get(i);
+            filePaths[i] = tab.getFilePath();
             if (!tab.isSaved) {
                 tab.checkIfUserWantsToSaveFile();
             }
         }
+
+        try {
+            XML xml = new XML("config.xml");
+
+
+            xml.writeVariables(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight(),
+                    colorTheme.getRed(), colorTheme.getGreen(), colorTheme.getBlue(), filePaths);
+        } catch (SAXException | IOException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+
+
         System.exit(0);
     }
 
