@@ -12,9 +12,9 @@
       <ColumnConstraints halignment="CENTER" prefWidth="150.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints prefHeight="40.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="40.0" valignment="TOP" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="ALWAYS" />
   </rowConstraints>
    <children>
       <Label text="Color theme:" />
