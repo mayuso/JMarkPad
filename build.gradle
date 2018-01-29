@@ -29,8 +29,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.github.rjeschke/txtmark
     compile group: 'com.github.rjeschke', name: 'txtmark', version: '0.13'
     // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
-    compile group: 'com.jfoenix', name: 'jfoenix', version: '9.0.1'
-
+    compile group: 'com.jfoenix', name: 'jfoenix', version: '8.0.1'
 
 }
 sourceSets {
@@ -40,7 +39,7 @@ sourceSets {
         }
         resources {
             srcDirs = ["src/main/resources"]
-            includes = ["**/*.fxml", "**/*.png", "**/*.txt", "**/*.css"]
+            includes = ["**/*.fxml", "**/*.css"]
             includes = []
         }
     }

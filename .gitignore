@@ -34,3 +34,5 @@ proguard/
 build/
 bin/
 out/
+
+*.xml
