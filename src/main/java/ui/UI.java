@@ -88,9 +88,7 @@ public class UI extends Application implements Initializable {
                     tab = new MyTab("New 1");
                     tabPane.getTabs().add(tab);
                 }
-
             }
-
 
         } catch (IOException e) {
             e.printStackTrace();

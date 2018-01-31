@@ -46,7 +46,7 @@ public class MyTab extends Tab {
         if (!isSaved) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Save");
-            alert.setContentText("Save file " + getText() + "?");
+            alert.setContentText("Save file \"" + getText().replace(" (*)", "") + "\"?");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
