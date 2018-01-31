@@ -20,7 +20,7 @@ import java.io.IOException;
 
 public class XML {
 
-    Document document;
+    private Document document;
 
     public XML(String filePath) throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
@@ -52,7 +52,7 @@ public class XML {
 
 
     public void writeVariables(double posX, double posY, double width, double height, double red, double green,
-                               double blue, String[] paths) throws ParserConfigurationException {
+                               double blue, String[] paths) {
 
         try {
 
@@ -103,10 +103,8 @@ public class XML {
             transformer.transform(source, result);
 
 
-        } catch (ParserConfigurationException pce) {
-            pce.printStackTrace();
-        } catch (TransformerException tfe) {
-            tfe.printStackTrace();
+        } catch (ParserConfigurationException | TransformerException e) {
+            e.printStackTrace();
         }
     }
 

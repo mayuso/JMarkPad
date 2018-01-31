@@ -11,7 +11,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -40,10 +39,9 @@ public class UI extends Application implements Initializable {
 
     private static String receivedPath = "";
     public JFXDrawer optionsDrawer;
-    OptionsPane optionsPane;
 
     public Color colorTheme;
-    public JFXDecorator decorator;
+    private JFXDecorator decorator;
 
     @Override
     public void start(Stage stage) {
@@ -80,7 +78,7 @@ public class UI extends Application implements Initializable {
                 try {
                     openFileIntoTab(new File(receivedPath), tab);
                     tab.setFilePath(receivedPath);
-                } catch (FileNotFoundException e) {
+                } catch (FileNotFoundException ignored) {
                 }
                 tabPane.getTabs().add(tab);
             } else {
@@ -117,7 +115,7 @@ public class UI extends Application implements Initializable {
 
                     tabPane.getTabs().add(tab);
                     tabPane.getSelectionModel().select(tab);
-                } catch (FileNotFoundException e) {
+                } catch (FileNotFoundException ignored) {
 
                 }
             }
@@ -135,7 +133,7 @@ public class UI extends Application implements Initializable {
     private void loadDrawers() {
 
         drawersStack.setMouseTransparent(true);
-        optionsPane = new OptionsPane(this);
+        OptionsPane optionsPane = new OptionsPane(this);
         FlowPane content = new FlowPane();
         optionsDrawer = new JFXDrawer();
         StackPane optionsDrawerPane = new StackPane();
@@ -317,7 +315,7 @@ public class UI extends Application implements Initializable {
         }
     }
 
-    public static String toRGB(Color color) {
+    private static String toRGB(Color color) {
         return String.format("#%02X%02X%02X",
                 (int) (color.getRed() * 255),
                 (int) (color.getGreen() * 255),

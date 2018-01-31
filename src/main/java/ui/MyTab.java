@@ -25,7 +25,7 @@ public class MyTab extends Tab {
     private String filePath = "";
 
     public boolean isSaved = true;
-    JFXButton button;
+    private JFXButton button;
     MyTab(String name, JFXTabPane tabPane) {
         super(name);
 
@@ -36,7 +36,7 @@ public class MyTab extends Tab {
         addListeners();
 
         setContent(splitPane);
-        setGraphic(createTabButton("files.png"));
+        setGraphic(createTabButton());
         ((JFXButton) getGraphic()).setOnAction(e -> {
             if (!isSaved) {
                 checkIfUserWantsToSaveFile();
@@ -45,11 +45,9 @@ public class MyTab extends Tab {
         });
 
     }
-    private JFXButton createTabButton(String iconName) {
+    private JFXButton createTabButton() {
         button = new JFXButton();
         button.setAlignment(Pos.CENTER_RIGHT);
-        //ImageView imageView = new ImageView(new Image(getClass().getResource(iconName).toExternalForm(), 16, 16, false, true));
-        //button.setGraphic(imageView);
         button.setText("X");
         button.getStyleClass().add("tab-button");
         return button;
@@ -142,7 +140,7 @@ public class MyTab extends Tab {
     }
 
     @SuppressWarnings("unused")
-    public void setWebView(WebView webView) {
+    private void setWebView(WebView webView) {
         this.webView = webView;
 
         //splitPane.getItems().clear();
@@ -156,7 +154,7 @@ public class MyTab extends Tab {
     }
 
     @SuppressWarnings("unused")
-    public JFXTextArea getTextArea() {
+    private JFXTextArea getTextArea() {
         return textArea;
     }
 
@@ -166,7 +164,7 @@ public class MyTab extends Tab {
     }
 
     @SuppressWarnings("unused")
-    public void setSaved(boolean isSaved) {
+    private void setSaved(boolean isSaved) {
         this.isSaved = isSaved;
         if (isSaved) {
             setText(getText().replace(" (*)", ""));
