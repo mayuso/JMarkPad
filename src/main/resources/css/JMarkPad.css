@@ -1,0 +1,30 @@
+.jfx-decorator .jfx-decorator-buttons-container {
+    -fx-background-color: -fx-decorator-color;
+}
+.jfx-decorator .resize-border {
+    -fx-border-color: -fx-decorator-color;
+    -fx-border-width: 0 4 4 4;
+}
+
+.tab-button {
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+//.jfx-tab-pane .headers-region {
+//    -fx-background-color: #1b75bc;
+//}
+.jfx-tab-pane .tab-header-background {
+    -fx-background-color: #BBBBBB;
+}
+//.jfx-tab-pane .tab-selected-line {
+//    -fx-stroke: #75bc1b;
+//    -fx-stroke-width: 3pt;
+//}
+
+
+
+
+
+

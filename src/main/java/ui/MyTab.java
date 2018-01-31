@@ -1,11 +1,11 @@
 package ui;
 
 import com.github.rjeschke.txtmark.Processor;
+import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import utilities.Utilities;
@@ -25,8 +25,8 @@ public class MyTab extends Tab {
     private String filePath = "";
 
     public boolean isSaved = true;
-
-    MyTab(String name) {
+    JFXButton button;
+    MyTab(String name, JFXTabPane tabPane) {
         super(name);
 
         splitPane = new SplitPane();
@@ -36,6 +36,23 @@ public class MyTab extends Tab {
         addListeners();
 
         setContent(splitPane);
+        setGraphic(createTabButton("files.png"));
+        ((JFXButton) getGraphic()).setOnAction(e -> {
+            if (!isSaved) {
+                checkIfUserWantsToSaveFile();
+            }
+            tabPane.getTabs().remove(this);
+        });
+
+    }
+    private JFXButton createTabButton(String iconName) {
+        button = new JFXButton();
+        button.setAlignment(Pos.CENTER_RIGHT);
+        //ImageView imageView = new ImageView(new Image(getClass().getResource(iconName).toExternalForm(), 16, 16, false, true));
+        //button.setGraphic(imageView);
+        button.setText("X");
+        button.getStyleClass().add("tab-button");
+        return button;
     }
 
     private void addListeners() {
@@ -100,6 +117,11 @@ public class MyTab extends Tab {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void updateButtonColor(String colorThemeString){
+        button.setStyle("-fx-background-color: " + colorThemeString + ";");
     }
 
     //Getters and setters

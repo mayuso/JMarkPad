@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="gridPane" stylesheets="@../../css/ui.css" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="gridPane" stylesheets="@../../css/JMarkPad.css" xmlns="http://javafx.com/javafx/8.0.162" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
       <ColumnConstraints halignment="CENTER" prefWidth="150.0" />
   </columnConstraints>
@@ -18,7 +18,7 @@
   </rowConstraints>
    <children>
       <Label text="Color theme:" />
-      <JFXButton fx:id="backButton" style="-fx-background-color: #AAAAAA;" text="Back" GridPane.rowIndex="2" />
+      <JFXButton fx:id="backButton" style="-fx-background-color: #BBBBBB;" text="Back" GridPane.rowIndex="2" />
       <JFXColorPicker fx:id="colorPicker" GridPane.rowIndex="1" />
    </children>
 </GridPane>

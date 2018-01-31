@@ -19,7 +19,6 @@ To use JMarkPad you only need to download and double click on the executable:
 
 We are constantly trying to improve JMarkPad, you can see the known bugs and planned enhancements on our [issues list](https://github.com/mayuso/JMarkPad/issues).
 
-
 ## Development
 
 ### Build status 

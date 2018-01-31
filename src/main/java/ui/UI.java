@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -58,7 +59,7 @@ public class UI extends Application implements Initializable {
             decorator.setCustomMaximize(true);
             Scene scene = new Scene(decorator, 800, 600);
 
-            scene.getStylesheets().add("/css/ui.css");
+            scene.getStylesheets().add("/css/JMarkPad.css");
             stage.initStyle(StageStyle.UNDECORATED);
             stage.setResizable(true);
 
@@ -72,10 +73,10 @@ public class UI extends Application implements Initializable {
             refreshTheme();
             stage.show();
 
-            tabPane.setTabClosingPolicy(JFXTabPane.TabClosingPolicy.ALL_TABS);
+
             MyTab tab;
             if (!receivedPath.equals("")) {
-                tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1]);
+                tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],tabPane);
                 try {
                     openFileIntoTab(new File(receivedPath), tab);
                     tab.setFilePath(receivedPath);
@@ -85,7 +86,7 @@ public class UI extends Application implements Initializable {
             } else {
 
                 if (tabPane.getTabs().size() < 1) {
-                    tab = new MyTab("New 1");
+                    tab = new MyTab("New 1",tabPane);
                     tabPane.getTabs().add(tab);
                 }
             }
@@ -107,7 +108,7 @@ public class UI extends Application implements Initializable {
                     Double.valueOf(xml.loadVariable("blue")), 1);
 
             for (String path : xml.loadVariables("file")) {
-                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1]);
+                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1],tabPane);
                 File file = new File(path);
                 try {
                     openFileIntoTab(file, tab);
@@ -176,7 +177,7 @@ public class UI extends Application implements Initializable {
         }
 
 
-        MyTab tab = new MyTab(newFileName);
+        MyTab tab = new MyTab(newFileName,tabPane);
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -191,7 +192,7 @@ public class UI extends Application implements Initializable {
                 return;
             }
 
-            MyTab tab = new MyTab(file.getName());
+            MyTab tab = new MyTab(file.getName(), tabPane);
             try {
                 openFileIntoTab(file, tab);
                 tab.setFilePath(file.getAbsolutePath());
@@ -311,6 +312,9 @@ public class UI extends Application implements Initializable {
 
         decorator.setStyle("-fx-decorator-color: " + colorThemeString + ";");
         menuBar.setStyle("-fx-background-color: " + colorThemeString + ";");
+        for (int i = 0; i < tabPane.getTabs().size(); i++) {
+            ((MyTab) tabPane.getTabs().get(i)).updateButtonColor(colorThemeString);
+        }
     }
 
     public static String toRGB(Color color) {
