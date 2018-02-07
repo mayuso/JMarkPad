@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import utilities.VariablesToSave;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,8 +52,7 @@ public class XML {
     }
 
 
-    public void writeVariables(double posX, double posY, double width, double height, double red, double green,
-                               double blue, String[] paths) {
+    public void writeVariables(VariablesToSave variablesToSave) {
 
         try {
 
@@ -64,31 +64,31 @@ public class XML {
             document.appendChild(rootElement);
 
             Element posXElement = document.createElement("posX");
-            posXElement.appendChild(document.createTextNode(String.valueOf(posX)));
+            posXElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.posX)));
             rootElement.appendChild(posXElement);
             Element posYElement = document.createElement("posY");
-            posYElement.appendChild(document.createTextNode(String.valueOf(posY)));
+            posYElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.posY)));
             rootElement.appendChild(posYElement);
 
             Element widthElement = document.createElement("width");
-            widthElement.appendChild(document.createTextNode(String.valueOf(width)));
+            widthElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.width)));
             rootElement.appendChild(widthElement);
             Element heightElement = document.createElement("height");
-            heightElement.appendChild(document.createTextNode(String.valueOf(height)));
+            heightElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.height)));
             rootElement.appendChild(heightElement);
 
             Element redElement = document.createElement("red");
-            redElement.appendChild(document.createTextNode(String.valueOf(red)));
+            redElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.red)));
             rootElement.appendChild(redElement);
             Element greemElement = document.createElement("green");
-            greemElement.appendChild(document.createTextNode(String.valueOf(green)));
+            greemElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.green)));
             rootElement.appendChild(greemElement);
             Element blueElement = document.createElement("blue");
-            blueElement.appendChild(document.createTextNode(String.valueOf(blue)));
+            blueElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.blue)));
             rootElement.appendChild(blueElement);
 
 
-            for (String pathName : paths) {
+            for (String pathName : variablesToSave.paths) {
                 Element file = document.createElement("file");
                 file.appendChild(document.createTextNode(pathName));
                 rootElement.appendChild(file);

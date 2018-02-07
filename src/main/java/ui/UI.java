@@ -20,6 +20,7 @@ import javafx.stage.StageStyle;
 import org.xml.sax.SAXException;
 import ui.panes.OptionsPane;
 import utilities.Utilities;
+import utilities.VariablesToSave;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
@@ -284,9 +285,17 @@ public class UI extends Application implements Initializable {
         try {
             XML xml = new XML("config.xml");
 
-
-            xml.writeVariables(stage.getX(), stage.getY(), stage.getWidth(), stage.getHeight(),
-                    colorTheme.getRed(), colorTheme.getGreen(), colorTheme.getBlue(), filePaths);
+            VariablesToSave variablesToSave = new VariablesToSave();
+            variablesToSave.posX = stage.getX();
+            variablesToSave.posY = stage.getY();
+            variablesToSave.width = stage.getWidth();
+            variablesToSave.height = stage.getHeight();
+            variablesToSave.red = colorTheme.getRed();
+            variablesToSave.green = colorTheme.getGreen();
+            variablesToSave.blue = colorTheme.getBlue();
+            variablesToSave.paths= filePaths;
+            xml.writeVariables(variablesToSave);
+            
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }

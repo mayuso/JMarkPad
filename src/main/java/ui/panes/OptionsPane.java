@@ -28,17 +28,14 @@ public class OptionsPane extends StackPane {
             Parent root = (Region) fxmlLoader.load();
             getStylesheets().add("/css/JMarkPad.css");
 
-
             addListeners(ui);
 
             colorPicker.setValue(ui.colorTheme);
             getChildren().add(root);
 
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
     }
 
