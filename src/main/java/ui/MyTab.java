@@ -4,8 +4,8 @@ import com.github.rjeschke.txtmark.Processor;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import utilities.Utilities;
@@ -26,7 +26,7 @@ public class MyTab extends Tab {
 
     public boolean isSaved = true;
     private JFXButton button;
-    MyTab(String name, JFXTabPane tabPane) {
+    MyTab(String name, JFXTabPane tabPane, String colorThemeString) {
         super(name);
 
         splitPane = new SplitPane();
@@ -36,7 +36,8 @@ public class MyTab extends Tab {
         addListeners();
 
         setContent(splitPane);
-        setGraphic(createTabButton());
+        setGraphic(createTabButton(colorThemeString));
+
         ((JFXButton) getGraphic()).setOnAction(e -> {
             if (!isSaved) {
                 checkIfUserWantsToSaveFile();
@@ -45,11 +46,14 @@ public class MyTab extends Tab {
         });
 
     }
-    private JFXButton createTabButton() {
+    private JFXButton createTabButton(String colorThemeString) {
         button = new JFXButton();
-        button.setAlignment(Pos.CENTER_RIGHT);
+
         button.setText("X");
+        button.setPrefWidth(10);
+        button.setPrefHeight(10);
         button.getStyleClass().add("tab-button");
+        updateButtonColor(colorThemeString);
         return button;
     }
 

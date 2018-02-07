@@ -68,13 +68,9 @@ public class UI extends Application implements Initializable {
             loadXMLValues();
             loadDrawers();
 
-            refreshTheme();
-            stage.show();
 
-
-            MyTab tab;
             if (!receivedPath.equals("")) {
-                tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],tabPane);
+                MyTab tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1], tabPane, toRGB(colorTheme));
                 try {
                     openFileIntoTab(new File(receivedPath), tab);
                     tab.setFilePath(receivedPath);
@@ -84,10 +80,12 @@ public class UI extends Application implements Initializable {
             } else {
 
                 if (tabPane.getTabs().size() < 1) {
-                    tab = new MyTab("New 1",tabPane);
+                    MyTab tab = new MyTab("New 1", tabPane, toRGB(colorTheme));
                     tabPane.getTabs().add(tab);
                 }
             }
+            refreshTheme();
+            stage.show();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,7 +104,7 @@ public class UI extends Application implements Initializable {
                     Double.valueOf(xml.loadVariable("blue")), 1);
 
             for (String path : xml.loadVariables("file")) {
-                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1],tabPane);
+                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1], tabPane, toRGB(colorTheme));
                 File file = new File(path);
                 try {
                     openFileIntoTab(file, tab);
@@ -175,7 +173,7 @@ public class UI extends Application implements Initializable {
         }
 
 
-        MyTab tab = new MyTab(newFileName,tabPane);
+        MyTab tab = new MyTab(newFileName, tabPane, toRGB(colorTheme));
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -190,7 +188,7 @@ public class UI extends Application implements Initializable {
                 return;
             }
 
-            MyTab tab = new MyTab(file.getName(), tabPane);
+            MyTab tab = new MyTab(file.getName(), tabPane, toRGB(colorTheme));
             try {
                 openFileIntoTab(file, tab);
                 tab.setFilePath(file.getAbsolutePath());
@@ -306,10 +304,10 @@ public class UI extends Application implements Initializable {
     }
 
     public void refreshTheme() {
-        String colorThemeString = toRGB(colorTheme);
-
+        String colorThemeString = toRGB(colorTheme), colorThemeStringBrighter = toRGB(colorTheme.brighter().brighter());
         decorator.setStyle("-fx-decorator-color: " + colorThemeString + ";");
         menuBar.setStyle("-fx-background-color: " + colorThemeString + ";");
+        tabPane.setStyle("tab-header-background: " + colorThemeStringBrighter + ";");
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
             ((MyTab) tabPane.getTabs().get(i)).updateButtonColor(colorThemeString);
         }
