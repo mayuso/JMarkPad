@@ -162,7 +162,7 @@ public class UI extends Application implements Initializable {
         while (newFileName.equals("")) {
             usedName = false;
             for (int i = 0; i < tabPane.getTabs().size(); i++) {
-                if (tabPane.getTabs().get(i).getText().equals("New " + counter)) {
+                if (tabPane.getTabs().get(i).getText().contains("New " + counter)) {
                     usedName = true;
                     i = tabPane.getTabs().size();
                 }

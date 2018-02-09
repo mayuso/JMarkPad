@@ -50,5 +50,4 @@ public class OptionsPane extends StackPane {
             ui.drawersStack.toggle(ui.optionsDrawer);
         });
     }
-
 }
