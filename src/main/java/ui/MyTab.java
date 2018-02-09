@@ -4,15 +4,22 @@ import com.github.rjeschke.txtmark.Processor;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
-import javafx.scene.control.*;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utilities.Utilities;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Optional;
 
 
 public class MyTab extends Tab {
@@ -25,6 +32,7 @@ public class MyTab extends Tab {
 
     public boolean isSaved = true;
     private JFXButton button;
+
     MyTab(String name, JFXTabPane tabPane, String colorThemeString) {
         super(name);
 
@@ -62,14 +70,37 @@ public class MyTab extends Tab {
 
     public void checkIfUserWantsToSaveFile() {
         if (!isSaved) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            /*Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Save");
             alert.setContentText("Save file \"" + getText().replace(" (*)", "") + "\"?");
 
             Optional<ButtonType> result = alert.showAndWait();
             if (result.get() == ButtonType.OK) {
                 checkSaveInCurrentPath();
-            }
+            }*/
+
+
+            Stage dialogStage = new Stage();
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            JFXButton buttonOk = new JFXButton("OK"), buttonCancel= new JFXButton("Cancel");
+
+            buttonOk.setOnAction(e -> {
+                checkSaveInCurrentPath();
+                dialogStage.close();
+            });
+            buttonCancel.setOnAction(e -> dialogStage.close());
+
+            HBox hbox = new HBox( buttonOk, buttonCancel);
+            hbox.setPadding(new Insets(30));
+            VBox vbox = new VBox(new Label("Save file \"" + getText().replace(" (*)", "") + "\"?"), hbox);
+            vbox.setAlignment(Pos.CENTER);
+            vbox.setPadding(new Insets(30));
+
+            Scene scene = new Scene(vbox);
+            dialogStage.setScene(scene);
+            dialogStage.setResizable(false);
+            dialogStage.showAndWait();
+
         }
     }
 
