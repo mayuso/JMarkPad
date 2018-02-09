@@ -36,7 +36,7 @@ public class XML {
         }
     }
 
-    public String loadVariable(String tagName) {
+    public String loadVariable(String tagName) throws NullPointerException{
         return document.getElementsByTagName(tagName).item(0).getTextContent();
     }
 

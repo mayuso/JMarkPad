@@ -120,11 +120,15 @@ public class UI extends Application implements Initializable {
             }
 
             new File("config.xml").delete();
-        } catch (SAXException | NullPointerException | IOException | ParserConfigurationException e) {
+        } catch (SAXException |  IOException | ParserConfigurationException e) {
             e.printStackTrace();
+
+        } catch(NullPointerException e){
             colorTheme = new Color((double) 173 / 255, (double) 216 / 255,
                     (double) 230 / 255, 1);
+            System.err.println("\"config.xml\" file not found. Creating...");
         }
+
 
 
     }
