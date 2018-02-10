@@ -11,10 +11,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.xml.sax.SAXException;
@@ -55,7 +57,6 @@ public class UI extends Application implements Initializable {
 
             decorator = new JFXDecorator(stage, root);
 
-            decorator.setCustomMaximize(true);
             Scene scene = new Scene(decorator, 800, 600);
 
             scene.getStylesheets().add("/css/JMarkPad.css");
@@ -120,17 +121,14 @@ public class UI extends Application implements Initializable {
             }
 
             new File("config.xml").delete();
-        } catch (SAXException |  IOException | ParserConfigurationException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
 
-        } catch(NullPointerException e){
+        } catch (NullPointerException e) {
             colorTheme = new Color((double) 173 / 255, (double) 216 / 255,
                     (double) 230 / 255, 1);
             System.err.println("\"config.xml\" file not found. Creating...");
         }
-
-
-
     }
 
     private void loadDrawers() {
@@ -216,6 +214,46 @@ public class UI extends Application implements Initializable {
 
     }
 
+    @FXML
+    public void markDownHelpClicked(ActionEvent ae) {
+
+        Stage markDownHelpStage = new Stage();
+        WebView webView = new WebView();
+        SplitPane splitPane = new SplitPane();
+        JFXTextArea textArea = new JFXTextArea();
+        textArea.textProperty().addListener(o -> Utilities.reparse(textArea.getText(), webView));
+        textArea.setText("# H1\n\n" +
+                "## H2\n\n" +
+                "### H3\n\n" +
+                "[link](https://github.com/mayuso/JMarkPad)\n\n"+
+                "List:\n"+
+                "* item 1\n"+
+                "* item 2\n"+
+                "* item 3\n\n"+
+                "    if 1 < 3:\n"+
+                "         print \"example code\"\n\n"+
+                "**bold**\n\n"+
+                "*italics*\n\n");
+        splitPane.getItems().add(0, textArea);
+        splitPane.getItems().add(1, webView);
+
+        JFXDecorator markDownHelpDecorator = new JFXDecorator(markDownHelpStage, splitPane);
+        Scene markDownHelpScene = new Scene(markDownHelpDecorator);
+
+
+        markDownHelpStage.initStyle(StageStyle.UNDECORATED);
+        markDownHelpStage.setResizable(true);
+
+        markDownHelpStage.setMinWidth(800);
+        markDownHelpStage.setMinHeight(600);
+        markDownHelpStage.setScene(markDownHelpScene);
+
+        markDownHelpScene.getStylesheets().add("/css/JMarkPad.css");
+        markDownHelpDecorator.setStyle("-fx-decorator-color: " + toRGB(colorTheme) + ";");
+
+        markDownHelpStage.show();
+    }
+
 
     private boolean isFileIsAlreadyOpen(String filePath) {
         boolean result = false;
@@ -297,9 +335,9 @@ public class UI extends Application implements Initializable {
             variablesToSave.red = colorTheme.getRed();
             variablesToSave.green = colorTheme.getGreen();
             variablesToSave.blue = colorTheme.getBlue();
-            variablesToSave.paths= filePaths;
+            variablesToSave.paths = filePaths;
             xml.writeVariables(variablesToSave);
-            
+
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }

@@ -137,19 +137,7 @@ public class MyTab extends Tab {
         }
     }
 
-    private void reparse(String text) {
-        try {
-            text = text.replace("\n", "\n\n");
-            String textHtml = Processor.process(text);
 
-            String doc = "<!DOCTYPE html><html><head><link href=\"%s\" rel=\"stylesheet\"/></head><body>%s</body></html>";
-            String css = "";
-            String html = String.format(doc, css, textHtml);
-            webView.getEngine().loadContent(html, "text/html");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     public void updateButtonColor(String colorThemeString){
@@ -161,7 +149,7 @@ public class MyTab extends Tab {
     public void setTextArea(JFXTextArea textArea) {
         this.textArea = textArea;
         textArea.textProperty().addListener(o -> {
-            reparse(textArea.getText());
+            Utilities.reparse(textArea.getText(), webView);
             setSaved(false);
         });
         //splitPane.getItems().clear();
