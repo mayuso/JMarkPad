@@ -30,8 +30,8 @@ public class XML {
         try {
             document = documentBuilder.parse(new File(filePath));
         } catch (FileNotFoundException | SAXParseException e) {
-            new File(filePath).delete();
             document = documentBuilder.newDocument();
+            new File(filePath).delete();
 
         }
     }
