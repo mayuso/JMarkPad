@@ -1,6 +1,5 @@
 package ui;
 
-import com.github.rjeschke.txtmark.Processor;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
@@ -152,7 +151,6 @@ public class MyTab extends Tab {
             Utilities.reparse(textArea.getText(), webView);
             setSaved(false);
         });
-        //splitPane.getItems().clear();
         if (splitPane.getItems().size() > 1) {
             splitPane.getItems().remove(0);
         }
@@ -165,7 +163,6 @@ public class MyTab extends Tab {
     private void setWebView(WebView webView) {
         this.webView = webView;
 
-        //splitPane.getItems().clear();
         if (splitPane.getItems().size() > 1) {
             splitPane.getItems().remove(1);
         }

@@ -36,7 +36,6 @@ public class OptionsPane extends StackPane {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     private void addListeners(UI ui) {
