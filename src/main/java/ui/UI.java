@@ -72,7 +72,8 @@ public class UI extends Application implements Initializable {
 
 
             if (!receivedPath.equals("")) {
-                MyTab tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1], tabPane, toRGB(colorTheme));
+                MyTab tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
+                        tabPane, colorTheme);
                 try {
                     openFileIntoTab(new File(receivedPath), tab);
                     tab.setFilePath(receivedPath);
@@ -82,7 +83,7 @@ public class UI extends Application implements Initializable {
             } else {
 
                 if (tabPane.getTabs().size() < 1) {
-                    MyTab tab = new MyTab("New 1", tabPane, toRGB(colorTheme));
+                    MyTab tab = new MyTab("New 1", tabPane, colorTheme);
                     tabPane.getTabs().add(tab);
                 }
             }
@@ -106,7 +107,7 @@ public class UI extends Application implements Initializable {
                     Double.valueOf(xml.loadVariable("blue")), 1);
 
             for (String path : xml.loadVariables("file")) {
-                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1], tabPane, toRGB(colorTheme));
+                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1], tabPane, colorTheme);
                 File file = new File(path);
                 try {
                     openFileIntoTab(file, tab);
@@ -176,7 +177,7 @@ public class UI extends Application implements Initializable {
         }
 
 
-        MyTab tab = new MyTab(newFileName, tabPane, toRGB(colorTheme));
+        MyTab tab = new MyTab(newFileName, tabPane, colorTheme);
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -191,7 +192,7 @@ public class UI extends Application implements Initializable {
                 return;
             }
 
-            MyTab tab = new MyTab(file.getName(), tabPane, toRGB(colorTheme));
+            MyTab tab = new MyTab(file.getName(), tabPane, colorTheme);
             try {
                 openFileIntoTab(file, tab);
                 tab.setFilePath(file.getAbsolutePath());
@@ -225,14 +226,14 @@ public class UI extends Application implements Initializable {
         textArea.setText("# H1\n\n" +
                 "## H2\n\n" +
                 "### H3\n\n" +
-                "[link](https://github.com/mayuso/JMarkPad)\n\n"+
-                "List:\n"+
-                "* item 1\n"+
-                "* item 2\n"+
-                "* item 3\n\n"+
-                "    if 1 < 3:\n"+
-                "         print \"example code\"\n\n"+
-                "**bold**\n\n"+
+                "[link](https://github.com/mayuso/JMarkPad)\n\n" +
+                "List:\n" +
+                "* item 1\n" +
+                "* item 2\n" +
+                "* item 3\n\n" +
+                "    if 1 < 3:\n" +
+                "         print \"example code\"\n\n" +
+                "**bold**\n\n" +
                 "*italics*\n\n");
         splitPane.getItems().add(0, textArea);
         splitPane.getItems().add(1, webView);
@@ -249,7 +250,7 @@ public class UI extends Application implements Initializable {
         markDownHelpStage.setScene(markDownHelpScene);
 
         markDownHelpScene.getStylesheets().add("/css/JMarkPad.css");
-        markDownHelpDecorator.setStyle("-fx-decorator-color: " + toRGB(colorTheme) + ";");
+        markDownHelpDecorator.setStyle("-fx-decorator-color: " + Utilities.toRGB(colorTheme) + ";");
 
         markDownHelpStage.show();
     }
@@ -355,19 +356,14 @@ public class UI extends Application implements Initializable {
     }
 
     public void refreshTheme() {
-        String colorThemeString = toRGB(colorTheme), colorThemeStringBrighter = toRGB(colorTheme.brighter().brighter());
+        String colorThemeString = Utilities.toRGB(colorTheme), colorThemeStringBrighter = Utilities.toRGB(colorTheme.brighter().brighter());
         decorator.setStyle("-fx-decorator-color: " + colorThemeString + ";");
         menuBar.setStyle("-fx-background-color: " + colorThemeString + ";");
         tabPane.setStyle("tab-header-background: " + colorThemeStringBrighter + ";");
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).updateButtonColor(colorThemeString);
+            ((MyTab) tabPane.getTabs().get(i)).updateButtonColor(colorTheme);
         }
     }
 
-    private static String toRGB(Color color) {
-        return String.format("#%02X%02X%02X",
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255));
-    }
+
 }

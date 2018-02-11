@@ -1,16 +1,18 @@
 package ui;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -31,10 +33,10 @@ public class MyTab extends Tab {
 
     public boolean isSaved = true;
     private JFXButton button;
-
-    MyTab(String name, JFXTabPane tabPane, String colorThemeString) {
+    Color colorTheme;
+    MyTab(String name, JFXTabPane tabPane, Color colorTheme) {
         super(name);
-
+        this.colorTheme=colorTheme;
         splitPane = new SplitPane();
         setTextArea(new JFXTextArea());
         setWebView(new WebView());
@@ -42,7 +44,7 @@ public class MyTab extends Tab {
         addListeners();
 
         setContent(splitPane);
-        setGraphic(createTabButton(colorThemeString));
+        setGraphic(createTabButton(colorTheme));
 
         ((JFXButton) getGraphic()).setOnAction(e -> {
             if (!isSaved) {
@@ -52,14 +54,14 @@ public class MyTab extends Tab {
         });
 
     }
-    private JFXButton createTabButton(String colorThemeString) {
+    private JFXButton createTabButton(Color colorTheme) {
         button = new JFXButton();
 
         button.setText("X");
         button.setPrefWidth(10);
         button.setPrefHeight(10);
         button.getStyleClass().add("tab-button");
-        updateButtonColor(colorThemeString);
+        updateButtonColor(colorTheme);
         return button;
     }
 
@@ -69,36 +71,32 @@ public class MyTab extends Tab {
 
     public void checkIfUserWantsToSaveFile() {
         if (!isSaved) {
-            /*Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Save");
-            alert.setContentText("Save file \"" + getText().replace(" (*)", "") + "\"?");
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                checkSaveInCurrentPath();
-            }*/
-
-
-            Stage dialogStage = new Stage();
-            dialogStage.initModality(Modality.WINDOW_MODAL);
+            Stage saveFileConfirmationStage = new Stage();
+            saveFileConfirmationStage.initModality(Modality.WINDOW_MODAL);
             JFXButton buttonOk = new JFXButton("OK"), buttonCancel= new JFXButton("Cancel");
 
             buttonOk.setOnAction(e -> {
                 checkSaveInCurrentPath();
-                dialogStage.close();
+                saveFileConfirmationStage.close();
             });
-            buttonCancel.setOnAction(e -> dialogStage.close());
+            buttonCancel.setOnAction(e -> saveFileConfirmationStage.close());
 
             HBox hbox = new HBox( buttonOk, buttonCancel);
             hbox.setPadding(new Insets(30));
-            VBox vbox = new VBox(new Label("Save file \"" + getText().replace(" (*)", "") + "\"?"), hbox);
+            VBox vbox = new VBox(new Text("Save file \"" + getText().replace(" (*)", "") + "\"?"), hbox);
             vbox.setAlignment(Pos.CENTER);
             vbox.setPadding(new Insets(30));
 
-            Scene scene = new Scene(vbox);
-            dialogStage.setScene(scene);
-            dialogStage.setResizable(false);
-            dialogStage.showAndWait();
+            JFXDecorator saveFileConfirmationDecorator = new JFXDecorator(saveFileConfirmationStage, vbox);
+
+            Scene saveFileConfirmationScene = new Scene(saveFileConfirmationDecorator);
+
+            saveFileConfirmationScene.getStylesheets().add("/css/JMarkPad.css");
+            saveFileConfirmationDecorator.setStyle("-fx-decorator-color: " + Utilities.toRGB(colorTheme) + ";");
+            saveFileConfirmationStage.setScene(saveFileConfirmationScene);
+            saveFileConfirmationStage.setResizable(false);
+            saveFileConfirmationStage.showAndWait();
 
         }
     }
@@ -139,8 +137,9 @@ public class MyTab extends Tab {
 
 
 
-    public void updateButtonColor(String colorThemeString){
-        button.setStyle("-fx-background-color: " + colorThemeString + ";");
+    public void updateButtonColor(Color colorTheme){
+        this.colorTheme=colorTheme;
+        button.setStyle("-fx-background-color: " + Utilities.toRGB(colorTheme) + ";");
     }
 
     //Getters and setters

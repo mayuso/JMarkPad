@@ -1,6 +1,7 @@
 package utilities;
 
 import com.github.rjeschke.txtmark.Processor;
+import javafx.scene.paint.Color;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 
@@ -28,5 +29,11 @@ public class Utilities {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public static String toRGB(Color color) {
+        return String.format("#%02X%02X%02X",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
     }
 }
