@@ -262,41 +262,33 @@ public class UI extends Application implements Initializable {
     @FXML
     public void markDownHelpClicked(ActionEvent ae) {
 
-        Stage markDownHelpStage = new Stage();
-        WebView webView = new WebView();
-        SplitPane splitPane = new SplitPane();
+        //Stage markDownHelpStage = new Stage();
+        //WebView webView = new WebView();
+        MyTab examplesTab = new MyTab("Examples", tabPane, colorTheme);
+
+        //SplitPane splitPane = new SplitPane();
         JFXTextArea textArea = new JFXTextArea();
-        textArea.textProperty().addListener(o -> Utilities.reparse(textArea.getText(), webView));
-        textArea.setText("# H1\n\n" +
-                "## H2\n\n" +
-                "### H3\n\n" +
+        //textArea.textProperty().addListener(o -> Utilities.reparse(textArea.getText(), webView));
+
+        //splitPane.getItems().add(0, textArea);
+        //splitPane.getItems().add(1, webView);
+
+        examplesTab.setTextArea(textArea);
+
+        
+        tabPane.getTabs().add(examplesTab);
+        tabPane.getSelectionModel().select(examplesTab);
+        textArea.setText("# Title 1\n\n" +
+                "## Title 2\n\n" +
+                "### Title 3\n\n" +
                 "[link](https://github.com/mayuso/JMarkPad)\n\n" +
                 "List:\n" +
                 "* item 1\n" +
                 "* item 2\n" +
                 "* item 3\n\n" +
-                "    if 1 < 3:\n" +
-                "         print \"example code\"\n\n" +
                 "**bold**\n\n" +
                 "*italics*\n\n");
-        splitPane.getItems().add(0, textArea);
-        splitPane.getItems().add(1, webView);
 
-        JFXDecorator markDownHelpDecorator = new JFXDecorator(markDownHelpStage, splitPane);
-        Scene markDownHelpScene = new Scene(markDownHelpDecorator);
-
-
-        markDownHelpStage.initStyle(StageStyle.UNDECORATED);
-        markDownHelpStage.setResizable(true);
-
-        markDownHelpStage.setMinWidth(800);
-        markDownHelpStage.setMinHeight(600);
-        markDownHelpStage.setScene(markDownHelpScene);
-
-        markDownHelpScene.getStylesheets().add("/css/JMarkPad.css");
-        markDownHelpDecorator.setStyle("-fx-decorator-color: " + Utilities.toRGB(colorTheme) + ";");
-
-        markDownHelpStage.show();
     }
 
     @FXML
