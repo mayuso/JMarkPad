@@ -20,6 +20,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.xml.sax.SAXException;
+import ui.panes.AboutPane;
 import ui.panes.OptionsPane;
 import utilities.Utilities;
 import utilities.VariablesToSave;
@@ -41,7 +42,7 @@ public class UI extends Application implements Initializable {
     public MenuBar menuBar;
 
     private static String receivedPath = "";
-    public JFXDrawer optionsDrawer;
+    public JFXDrawer optionsDrawer, aboutDrawer;
 
     public Color colorTheme;
     private JFXDecorator decorator;
@@ -135,11 +136,12 @@ public class UI extends Application implements Initializable {
     private void loadDrawers() {
 
         drawersStack.setMouseTransparent(true);
-        OptionsPane optionsPane = new OptionsPane(this);
-        FlowPane content = new FlowPane();
-        optionsDrawer = new JFXDrawer();
-        StackPane optionsDrawerPane = new StackPane();
 
+        FlowPane content = new FlowPane();
+
+        StackPane optionsDrawerPane = new StackPane();
+        optionsDrawer = new JFXDrawer();
+        OptionsPane optionsPane = new OptionsPane(this);
         optionsDrawerPane.getChildren().add(optionsPane);
         optionsDrawer.setDirection(DrawerDirection.RIGHT);
         optionsDrawer.setSidePane(optionsDrawerPane);
@@ -147,6 +149,17 @@ public class UI extends Application implements Initializable {
         optionsDrawer.setOverLayVisible(false);
         optionsDrawer.setResizableOnDrag(true);
 
+
+        aboutDrawer = new JFXDrawer();
+
+        AboutPane aboutPane = new AboutPane(this);
+        StackPane aboutDrawerPane = new StackPane();
+        aboutDrawerPane.getChildren().add(aboutPane);
+        aboutDrawer.setDirection(DrawerDirection.RIGHT);
+        aboutDrawer.setSidePane(aboutDrawerPane);
+        aboutDrawer.setDefaultDrawerSize(400);
+        aboutDrawer.setOverLayVisible(false);
+        aboutDrawer.setResizableOnDrag(true);
 
         drawersStack.setContent(content);
 
@@ -208,6 +221,37 @@ public class UI extends Application implements Initializable {
 
     }
 
+
+
+    @FXML
+    public void saveClicked(ActionEvent ae) {
+        ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
+    }
+
+    @FXML
+    public void saveAllClicked(ActionEvent ae) {
+        for (int i = 0; i < tabPane.getTabs().size(); i++) {
+            ((MyTab) tabPane.getTabs().get(i)).checkSaveInCurrentPath();
+        }
+    }
+
+    @FXML
+    public void saveAsClicked(ActionEvent ae) {
+        for (int i = 0; i < tabPane.getTabs().size(); i++) {
+            ((MyTab) tabPane.getTabs().get(i)).saveAs();
+        }
+    }
+
+
+    @FXML
+    public void closeClicked(ActionEvent ae) {
+
+        if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
+            ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
+        }
+        tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
+    }
+
     @FXML
     public void optionsClicked(ActionEvent ae) {
         drawersStack.toggle(optionsDrawer);
@@ -255,6 +299,12 @@ public class UI extends Application implements Initializable {
         markDownHelpStage.show();
     }
 
+    @FXML
+    public void aboutClicked(ActionEvent ae) {
+        drawersStack.toggle(aboutDrawer);
+        drawersStack.setMouseTransparent(false);
+    }
+
 
     private boolean isFileIsAlreadyOpen(String filePath) {
         boolean result = false;
@@ -281,35 +331,6 @@ public class UI extends Application implements Initializable {
         bufferedReader.close();
         tab.setTextArea(textArea);
 
-    }
-
-    @FXML
-    public void saveClicked(ActionEvent ae) {
-        ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
-    }
-
-    @FXML
-    public void saveAllClicked(ActionEvent ae) {
-        for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).checkSaveInCurrentPath();
-        }
-    }
-
-    @FXML
-    public void saveAsClicked(ActionEvent ae) {
-        for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).saveAs();
-        }
-    }
-
-
-    @FXML
-    public void closeClicked(ActionEvent ae) {
-
-        if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
-            ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
-        }
-        tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
     }
 
     @Override
