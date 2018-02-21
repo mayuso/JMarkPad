@@ -127,8 +127,8 @@ public class UI extends Application implements Initializable {
             e.printStackTrace();
 
         } catch (NullPointerException e) {
-            colorTheme = new Color((double) 173 / 255, (double) 216 / 255,
-                    (double) 230 / 255, 1);
+            colorTheme = new Color((double) 0 / 255, (double) 151 / 255,
+                    (double) 167 / 255, 1);
             System.err.println("\"config.xml\" file not found. Creating...");
         }
     }
