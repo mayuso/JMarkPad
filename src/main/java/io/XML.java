@@ -31,8 +31,6 @@ public class XML {
             document = documentBuilder.parse(new File(filePath));
         } catch (FileNotFoundException | SAXParseException e) {
             document = documentBuilder.newDocument();
-            new File(filePath).delete();
-
         }
     }
 
