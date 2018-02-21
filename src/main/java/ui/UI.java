@@ -157,7 +157,7 @@ public class UI extends Application implements Initializable {
         aboutDrawerPane.getChildren().add(aboutPane);
         aboutDrawer.setDirection(DrawerDirection.RIGHT);
         aboutDrawer.setSidePane(aboutDrawerPane);
-        aboutDrawer.setDefaultDrawerSize(400);
+        aboutDrawer.setDefaultDrawerSize(750);
         aboutDrawer.setOverLayVisible(false);
         aboutDrawer.setResizableOnDrag(true);
 

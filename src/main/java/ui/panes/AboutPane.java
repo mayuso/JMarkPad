@@ -7,14 +7,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebView;
 import ui.UI;
+import utilities.Utilities;
 
 import java.io.IOException;
 
 public class AboutPane extends StackPane {
 
     @FXML
-    JFXTextArea aboutTextArea;
+    WebView aboutWebView;
     @FXML
     JFXButton backButton;
 
@@ -45,6 +47,18 @@ public class AboutPane extends StackPane {
     }
 
     private void writeTextAreaText() {
-        aboutTextArea.setText("");
+        Utilities.reparse(new String("# Why? \n" +
+                "I created JMarkPad as a tool to experiment with JavaFX.\n" +
+                "I kept adding functionalities to it until somehow became a useful tool.\n\n" +
+                "# Source code:\n" +
+                "Find the full source code and additional in the following github repository\n" +
+                "https://github.com/mayuso/JMarkPad\n\n" +
+                "# Found a bug?\n" +
+                "Please feel free to open a new issue in our github issue tracker:\n"+
+                "https://github.com/mayuso/JMarkPad/issues\n\n" +
+                "**Thank you for using JMarkPad**"), aboutWebView);
+
     }
+
+
 }
