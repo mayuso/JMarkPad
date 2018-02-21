@@ -25,15 +25,17 @@ import java.io.IOException;
 
 public class MyTab extends Tab {
 
+    private JFXButton button;
+    private SplitPane splitPane;
     private JFXTextArea textArea;
     private WebView webView;
-    private SplitPane splitPane;
+
+
+    private Color colorTheme;
 
     private String filePath = "";
-
     public boolean isSaved = true;
-    private JFXButton button;
-    Color colorTheme;
+
     MyTab(String name, JFXTabPane tabPane, Color colorTheme) {
         super(name);
         this.colorTheme=colorTheme;
