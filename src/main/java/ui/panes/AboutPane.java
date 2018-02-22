@@ -1,7 +1,6 @@
 package ui.panes;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextArea;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,9 +15,9 @@ import java.io.IOException;
 public class AboutPane extends StackPane {
 
     @FXML
-    WebView aboutWebView;
+    private WebView aboutWebView;
     @FXML
-    JFXButton backButton;
+    private JFXButton backButton;
 
     public AboutPane(UI ui) {
 

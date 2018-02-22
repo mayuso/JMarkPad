@@ -5,7 +5,6 @@ import com.jfoenix.controls.JFXColorPicker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import ui.UI;
@@ -14,11 +13,10 @@ import java.io.IOException;
 
 public class OptionsPane extends StackPane {
     @FXML
-    JFXColorPicker colorPicker;
+    private  JFXColorPicker colorPicker;
     @FXML
-    JFXButton backButton;
-    @FXML
-    public GridPane gridPane;
+    private JFXButton backButton;
+
 
     public OptionsPane(UI ui) {
 
