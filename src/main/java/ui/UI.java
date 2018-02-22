@@ -317,12 +317,12 @@ public class UI extends Application implements Initializable {
         String text;
 
         JFXTextArea textArea = new JFXTextArea("");
+        tab.setTextArea(textArea);
         while ((text = bufferedReader.readLine()) != null) {
             textArea.appendText(text + "\n");
         }
         bufferedReader.close();
-        tab.setTextArea(textArea);
-
+        
     }
 
     @Override
