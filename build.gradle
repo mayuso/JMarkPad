@@ -15,10 +15,8 @@ buildscript {
     }
 }
 repositories {
-
     jcenter()
     mavenCentral()
-
 }
 
 dependencies {
@@ -29,9 +27,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
     compile group: 'com.jfoenix', name: 'jfoenix', version: '8.0.1'
 
-// https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark
+    // https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark
     compile group: 'com.vladsch.flexmark', name: 'flexmark', version: '0.32.4'
-
 
 
 }
