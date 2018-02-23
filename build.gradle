@@ -29,8 +29,9 @@ dependencies {
     // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
     compile group: 'com.jfoenix', name: 'jfoenix', version: '8.0.1'
 
-    // https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark-java
-    compile group: 'com.vladsch.flexmark', name: 'flexmark-all', version: '0.32.4'
+// https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark
+    compile group: 'com.vladsch.flexmark', name: 'flexmark', version: '0.32.4'
+
 
 
 }

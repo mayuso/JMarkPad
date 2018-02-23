@@ -5,19 +5,17 @@ import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 import javafx.scene.paint.Color;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 
 public class Utilities {
 
-    static MutableDataSet options;
-    static Parser parser;
-    static HtmlRenderer renderer;
+    private static Parser parser;
+    private static HtmlRenderer renderer;
     public static FileChooser fileChooser;
 
     public Utilities() {
 
-        options = new MutableDataSet();
+        MutableDataSet options = new MutableDataSet();
         parser = Parser.builder(options).build();
         renderer = HtmlRenderer.builder(options).build();
 

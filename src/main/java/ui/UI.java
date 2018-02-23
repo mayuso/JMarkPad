@@ -11,12 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.xml.sax.SAXException;
@@ -122,7 +120,6 @@ public class UI extends Application implements Initializable {
                 }
             }
 
-            
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
 
