@@ -46,7 +46,7 @@ public class AboutPane extends StackPane {
     }
 
     private void writeTextAreaText() {
-        Utilities.reparse("# Why? \n" +
+        aboutWebView.getEngine().loadContent(Utilities.reparse("# Why? \n" +
                 "I created JMarkPad as a tool to experiment with JavaFX.\n" +
                 "I kept adding functionalities to it until somehow became a useful tool.\n\n" +
                 "# Source code:\n" +
@@ -55,7 +55,7 @@ public class AboutPane extends StackPane {
                 "# Found a bug?\n" +
                 "Please feel free to open a new issue in our github issue tracker:\n" +
                 "https://github.com/mayuso/JMarkPad/issues\n\n" +
-                "**Thank you for using JMarkPad**", aboutWebView);
+                "**Thank you for using JMarkPad**"), "text/html");
 
     }
 

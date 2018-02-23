@@ -149,7 +149,7 @@ public class MyTab extends Tab {
     public void setTextArea(JFXTextArea textArea) {
         this.textArea = textArea;
         textArea.textProperty().addListener(o -> {
-            Utilities.reparse(textArea.getText(), webView);
+            webView.getEngine().loadContent(Utilities.reparse(textArea.getText()), "text/html");
             setSaved(false);
         });
         if (splitPane.getItems().size() > 1) {
