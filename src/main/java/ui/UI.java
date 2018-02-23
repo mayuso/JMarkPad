@@ -122,7 +122,7 @@ public class UI extends Application implements Initializable {
                 }
             }
 
-            new File("config.xml").delete();
+            
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
 
@@ -322,7 +322,7 @@ public class UI extends Application implements Initializable {
             textArea.appendText(text + "\n");
         }
         bufferedReader.close();
-        
+
     }
 
     @Override
