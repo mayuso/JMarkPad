@@ -19,10 +19,12 @@ To use JMarkPad you only need to download and double click on the executable:
 
 We are constantly trying to improve JMarkPad, you can see the known bugs and planned enhancements on our [issues list](https://github.com/mayuso/JMarkPad/issues).
 
-## Development
+### Other useful information
 
-### Build status 
-Develop branch: [![Build Status](https://travis-ci.org/mayuso/JMarkPad.svg?branch=develop)](https://travis-ci.org/mayuso/JMarkPad)
+[![Build Status](https://travis-ci.org/mayuso/JMarkPad.svg?branch=develop)](https://travis-ci.org/mayuso/JMarkPad)
+[![HitCount](http://hits.dwyl.io/mayuso/JMarkPad.svg)](http://hits.dwyl.io/mayuso/JMarkPad)
+
+## Development
 
 ### Versioning
 
