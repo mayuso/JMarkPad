@@ -34,7 +34,7 @@ public class MyTab extends Tab {
     private Color colorTheme;
 
     private String filePath = "";
-    public boolean isSaved = true;
+    boolean isSaved = true;
 
     MyTab(String name, JFXTabPane tabPane, Color colorTheme) {
         super(name);
@@ -71,7 +71,7 @@ public class MyTab extends Tab {
         setOnCloseRequest(e -> checkIfUserWantsToSaveFile());
     }
 
-    public void checkIfUserWantsToSaveFile() {
+    void checkIfUserWantsToSaveFile() {
         if (!isSaved) {
 
             Stage saveFileConfirmationStage = new Stage();
@@ -104,7 +104,7 @@ public class MyTab extends Tab {
     }
 
 
-    public void checkSaveInCurrentPath() {
+    void checkSaveInCurrentPath() {
         File file;
         if (filePath.equals("")) {
             file = Utilities.fileChooser.showSaveDialog(new Stage());
@@ -115,7 +115,7 @@ public class MyTab extends Tab {
 
     }
 
-    public void saveAs() {
+    void saveAs() {
         File file = Utilities.fileChooser.showSaveDialog(new Stage());
         save(file);
 
@@ -139,14 +139,14 @@ public class MyTab extends Tab {
 
 
 
-    public void updateButtonColor(Color colorTheme){
+    void updateButtonColor(Color colorTheme){
         this.colorTheme=colorTheme;
         button.setStyle("-fx-background-color: " + Utilities.toRGB(colorTheme) + ";");
     }
 
     //Getters and setters
     @SuppressWarnings("unused")
-    public void setTextArea(JFXTextArea textArea) {
+    void setTextArea(JFXTextArea textArea) {
         this.textArea = textArea;
         textArea.textProperty().addListener(o -> {
             webView.getEngine().loadContent(Utilities.reparse(textArea.getText()), "text/html");
@@ -195,12 +195,12 @@ public class MyTab extends Tab {
     }
 
     @SuppressWarnings("unused")
-    public String getFilePath() {
+    String getFilePath() {
         return filePath;
     }
 
     @SuppressWarnings("unused")
-    public void setFilePath(String filePath) {
+    void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 }
