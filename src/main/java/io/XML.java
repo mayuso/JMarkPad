@@ -95,7 +95,7 @@ public class XML {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(new File("config.xml"));
+            StreamResult result = new StreamResult(new File("jmarkpad.xml"));
 
 
             transformer.transform(source, result);

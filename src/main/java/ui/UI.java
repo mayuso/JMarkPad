@@ -96,7 +96,7 @@ public class UI extends Application implements Initializable {
 
     private void loadXMLValues() {
         try {
-            XML xml = new XML("config.xml");
+            XML xml = new XML("jmarkpad.xml");
             stage.setX(Double.valueOf(xml.loadVariable("posX")));
             stage.setY(Double.valueOf(xml.loadVariable("posY")));
             stage.setWidth(Double.valueOf(xml.loadVariable("width")));
@@ -126,7 +126,7 @@ public class UI extends Application implements Initializable {
         } catch (NullPointerException e) {
             colorTheme = new Color((double) 0 / 255, (double) 151 / 255,
                     (double) 167 / 255, 1);
-            System.err.println("\"config.xml\" file not found. Creating...");
+            System.err.println("\"jmarkpad.xml\" file not found. Creating...");
         }
     }
 
@@ -336,7 +336,7 @@ public class UI extends Application implements Initializable {
         }
 
         try {
-            XML xml = new XML("config.xml");
+            XML xml = new XML("jmarkpad.xml");
 
             VariablesToSave variablesToSave = new VariablesToSave();
             variablesToSave.posX = stage.getX();
