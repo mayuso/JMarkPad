@@ -22,7 +22,6 @@ We are constantly trying to improve JMarkPad, you can see the known bugs and pla
 ### Other useful information
 
 [![Build Status](https://travis-ci.org/mayuso/JMarkPad.svg?branch=develop)](https://travis-ci.org/mayuso/JMarkPad)
-[![HitCount](http://hits.dwyl.io/mayuso/JMarkPad.svg)](http://hits.dwyl.io/mayuso/JMarkPad)
 
 ## Development
 
