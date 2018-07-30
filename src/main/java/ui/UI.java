@@ -2,7 +2,6 @@ package ui;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
-import io.XML;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,21 +10,21 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.xml.sax.SAXException;
 import ui.panes.AboutPane;
 import ui.panes.OptionsPane;
 import utilities.Utilities;
-import utilities.VariablesToSave;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 
@@ -44,6 +43,8 @@ public class UI extends Application implements Initializable {
 
     public Color colorTheme;
     private JFXDecorator decorator;
+
+    private String folderPath;
 
     @Override
     public void start(Stage stage) {
@@ -66,7 +67,7 @@ public class UI extends Application implements Initializable {
             stage.setMinHeight(600);
             stage.setScene(scene);
             new Utilities();
-            loadXMLValues();
+            loadConfig();
             loadDrawers();
 
 
@@ -94,39 +95,38 @@ public class UI extends Application implements Initializable {
         }
     }
 
-    private void loadXMLValues() {
+    private void loadConfig() {
         try {
-            XML xml = new XML("jmarkpad.xml");
-            stage.setX(Double.valueOf(xml.loadVariable("posX")));
-            stage.setY(Double.valueOf(xml.loadVariable("posY")));
-            stage.setWidth(Double.valueOf(xml.loadVariable("width")));
-            stage.setHeight(Double.valueOf(xml.loadVariable("height")));
-            colorTheme = new Color(Double.valueOf(xml.loadVariable("red")),
-                    Double.valueOf(xml.loadVariable("green")),
-                    Double.valueOf(xml.loadVariable("blue")), 1);
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("jmarkpad.properties"));
+            stage.setX(Double.valueOf(properties.getProperty("posX", "0")));
+            stage.setY(Double.valueOf(properties.getProperty("posY", "0")));
+            stage.setWidth(Double.valueOf(properties.getProperty("width", "800")));
+            stage.setHeight(Double.valueOf(properties.getProperty("height", "600")));
+            colorTheme = new Color(
+                    Double.valueOf(properties.getProperty("red", "0")),
+                    Double.valueOf(properties.getProperty("green", "0.59")),
+                    Double.valueOf(properties.getProperty("blu", "0.65")),
+                    Double.valueOf(properties.getProperty("alpha", "1"))
+            );
 
-            for (String path : xml.loadVariables("file")) {
-                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1], tabPane, colorTheme);
+            folderPath = properties.getProperty("folderPath");
+            String pathFiles = properties.getProperty("filePaths");
+
+            for (String path : pathFiles.split(";"))
+            {
+                MyTab tab = new MyTab(new File(path).getName(), tabPane, colorTheme);
                 File file = new File(path);
-                try {
-                    openFileIntoTab(file, tab);
 
-                    tab.setFilePath(file.getAbsolutePath());
+                openFileIntoTab(file, tab);
 
-                    tabPane.getTabs().add(tab);
-                    tabPane.getSelectionModel().select(tab);
-                } catch (FileNotFoundException ignored) {
+                tab.setFilePath(file.getAbsolutePath());
 
-                }
+                tabPane.getTabs().add(tab);
+                tabPane.getSelectionModel().select(tab);
             }
-
-        } catch (SAXException | IOException | ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-
-        } catch (NullPointerException e) {
-            colorTheme = new Color((double) 0 / 255, (double) 151 / 255,
-                    (double) 167 / 255, 1);
-            System.err.println("\"jmarkpad.xml\" file not found. Creating...");
         }
     }
 
@@ -195,27 +195,40 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void openClicked(ActionEvent ae) {
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
 
-        File file = Utilities.fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            if (isFileIsAlreadyOpen(file.getAbsolutePath())) {
-                return;
+        try {
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("jmarkpad.properties"));
+
+            if (folderPath != null) {
+                fc.setInitialDirectory(new File(folderPath));
             }
-
-            MyTab tab = new MyTab(file.getName(), tabPane, colorTheme);
-            try {
-                openFileIntoTab(file, tab);
-                tab.setFilePath(file.getAbsolutePath());
-
-                tabPane.getTabs().add(tab);
-                tabPane.getSelectionModel().select(tab);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        File file = fc.showOpenDialog(stage);
+
+        if (file != null) {
+            try {
+                folderPath = file.getParent();
+
+                if (!isFileIsAlreadyOpen(file.getAbsolutePath())) {
+                    MyTab tab = new MyTab(file.getName(), tabPane, colorTheme);
+                    openFileIntoTab(file, tab);
+                    tab.setFilePath(file.getAbsolutePath());
+
+                    tabPane.getTabs().add(tab);
+                    tabPane.getSelectionModel().select(tab);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -283,6 +296,7 @@ public class UI extends Application implements Initializable {
                 "* item 1\n" +
                 "* item 2\n" +
                 "* item 3\n\n" +
+
                 "**bold**\n\n" +
                 "*italics*\n\n");
 
@@ -324,35 +338,33 @@ public class UI extends Application implements Initializable {
 
     @Override
     public void stop() {
-        String[] filePaths = new String[tabPane.getTabs().size()];
+        String filePaths = new String();
 
+        for (Tab tab : tabPane.getTabs()) {
+            MyTab mTab = (MyTab) tab;
+            filePaths = filePaths.concat(mTab.getFilePath() + ";");
 
-        for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            MyTab tab = (MyTab) tabPane.getTabs().get(i);
-            filePaths[i] = tab.getFilePath();
-            if (!tab.isSaved) {
-                tab.checkIfUserWantsToSaveFile();
+            if (!mTab.isSaved) {
+                mTab.checkIfUserWantsToSaveFile();
             }
         }
 
         try {
-            XML xml = new XML("jmarkpad.xml");
-
-            VariablesToSave variablesToSave = new VariablesToSave();
-            variablesToSave.posX = stage.getX();
-            variablesToSave.posY = stage.getY();
-            variablesToSave.width = stage.getWidth();
-            variablesToSave.height = stage.getHeight();
-            variablesToSave.red = colorTheme.getRed();
-            variablesToSave.green = colorTheme.getGreen();
-            variablesToSave.blue = colorTheme.getBlue();
-            variablesToSave.openedFilesPaths = filePaths;
-            xml.writeVariables(variablesToSave);
-
-        } catch (SAXException | IOException | ParserConfigurationException e) {
+            Properties properties = new Properties();
+            properties.setProperty("posX", String.valueOf(stage.getX()));
+            properties.setProperty("posY", String.valueOf(stage.getY()));
+            properties.setProperty("width", String.valueOf(stage.getWidth()));
+            properties.setProperty("height", String.valueOf(stage.getHeight()));
+            properties.setProperty("red", String.valueOf(colorTheme.getRed()));
+            properties.setProperty("green", String.valueOf(colorTheme.getGreen()));
+            properties.setProperty("blu", String.valueOf(colorTheme.getBlue()));
+            properties.setProperty("alpha", String.valueOf(colorTheme.getOpacity()));
+            properties.setProperty("folderPath", String.valueOf(folderPath));
+            properties.setProperty("filePaths", String.valueOf(filePaths));
+            properties.store(new FileOutputStream("jmarkpad.properties"), null);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         System.exit(0);
     }
@@ -374,6 +386,5 @@ public class UI extends Application implements Initializable {
             ((MyTab) tabPane.getTabs().get(i)).updateButtonColor(colorTheme);
         }
     }
-
 
 }
