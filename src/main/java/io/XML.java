@@ -78,15 +78,15 @@ public class XML {
             Element redElement = document.createElement("red");
             redElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.red)));
             rootElement.appendChild(redElement);
-            Element greemElement = document.createElement("green");
-            greemElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.green)));
-            rootElement.appendChild(greemElement);
+            Element greenElement = document.createElement("green");
+            greenElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.green)));
+            rootElement.appendChild(greenElement);
             Element blueElement = document.createElement("blue");
             blueElement.appendChild(document.createTextNode(String.valueOf(variablesToSave.blue)));
             rootElement.appendChild(blueElement);
 
 
-            for (String pathName : variablesToSave.paths) {
+            for (String pathName : variablesToSave.openedFilesPaths) {
                 Element file = document.createElement("file");
                 file.appendChild(document.createTextNode(pathName));
                 rootElement.appendChild(file);

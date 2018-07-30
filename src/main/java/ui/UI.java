@@ -346,7 +346,7 @@ public class UI extends Application implements Initializable {
             variablesToSave.red = colorTheme.getRed();
             variablesToSave.green = colorTheme.getGreen();
             variablesToSave.blue = colorTheme.getBlue();
-            variablesToSave.paths = filePaths;
+            variablesToSave.openedFilesPaths = filePaths;
             xml.writeVariables(variablesToSave);
 
         } catch (SAXException | IOException | ParserConfigurationException e) {
