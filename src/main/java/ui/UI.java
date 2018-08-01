@@ -195,26 +195,19 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void openClicked(ActionEvent ae) {
-        FileChooser fc = new FileChooser();
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
-        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
-
         try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream("jmarkpad.properties"));
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
 
             if (folderPath != null) {
                 fc.setInitialDirectory(new File(folderPath));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        File file = fc.showOpenDialog(stage);
+            File file = fc.showOpenDialog(stage);
 
-        if (file != null) {
-            try {
+            if (file != null) {
                 folderPath = file.getParent();
 
                 if (!isFileIsAlreadyOpen(file.getAbsolutePath())) {
@@ -225,10 +218,11 @@ public class UI extends Application implements Initializable {
                     tabPane.getTabs().add(tab);
                     tabPane.getSelectionModel().select(tab);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
 
@@ -255,7 +249,6 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void closeClicked(ActionEvent ae) {
-
         if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
             ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
         }
