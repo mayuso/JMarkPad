@@ -39,7 +39,7 @@
       </MenuBar>
    </top>
    <center>
-      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <StackPane fx:id="stackPane" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
             <JFXTabPane fx:id="tabPane" stylesheets="@../css/JMarkPad.css" />
             <JFXDrawersStack fx:id="drawersStack" />

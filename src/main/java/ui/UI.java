@@ -15,15 +15,17 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import ui.panes.AboutPane;
 import ui.panes.OptionsPane;
 import utilities.Utilities;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -31,6 +33,8 @@ import java.util.ResourceBundle;
 public class UI extends Application implements Initializable {
 
     private Stage stage;
+    @FXML
+    public StackPane stackPane;
     @FXML
     public JFXDrawersStack drawersStack;
     @FXML
@@ -87,6 +91,7 @@ public class UI extends Application implements Initializable {
                     tabPane.getTabs().add(tab);
                 }
             }
+
             refreshTheme();
             stage.show();
 
@@ -97,6 +102,11 @@ public class UI extends Application implements Initializable {
 
     private void loadConfig() {
         try {
+            if (!new File("jmarkpad.properties").exists())
+            {
+                Files.copy(Paths.get("properties/default.properties"), Paths.get("jmarkpad.properties"));
+            }
+
             Properties properties = new Properties();
             properties.load(new FileInputStream("jmarkpad.properties"));
             stage.setX(Double.valueOf(properties.getProperty("posX", "0")));
@@ -131,7 +141,6 @@ public class UI extends Application implements Initializable {
     }
 
     private void loadDrawers() {
-
         drawersStack.setMouseTransparent(true);
 
         FlowPane content = new FlowPane();
@@ -146,20 +155,7 @@ public class UI extends Application implements Initializable {
         optionsDrawer.setOverLayVisible(false);
         optionsDrawer.setResizableOnDrag(true);
 
-
-        aboutDrawer = new JFXDrawer();
-
-        AboutPane aboutPane = new AboutPane(this);
-        StackPane aboutDrawerPane = new StackPane();
-        aboutDrawerPane.getChildren().add(aboutPane);
-        aboutDrawer.setDirection(DrawerDirection.RIGHT);
-        aboutDrawer.setSidePane(aboutDrawerPane);
-        aboutDrawer.setDefaultDrawerSize(750);
-        aboutDrawer.setOverLayVisible(false);
-        aboutDrawer.setResizableOnDrag(true);
-
         drawersStack.setContent(content);
-
     }
 
     @Override
@@ -201,7 +197,7 @@ public class UI extends Application implements Initializable {
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
 
-            if (folderPath != null) {
+            if (folderPath != null && !folderPath.isEmpty()) {
                 fc.setInitialDirectory(new File(folderPath));
             }
 
@@ -225,8 +221,6 @@ public class UI extends Application implements Initializable {
 
     }
 
-
-
     @FXML
     public void saveClicked(ActionEvent ae) {
         ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
@@ -246,7 +240,6 @@ public class UI extends Application implements Initializable {
         }
     }
 
-
     @FXML
     public void closeClicked(ActionEvent ae) {
         if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
@@ -264,21 +257,10 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void markDownHelpClicked(ActionEvent ae) {
-
-        //Stage markDownHelpStage = new Stage();
-        //WebView webView = new WebView();
         MyTab examplesTab = new MyTab("Examples", tabPane, colorTheme);
-
-        //SplitPane splitPane = new SplitPane();
         JFXTextArea textArea = new JFXTextArea();
-        //textArea.textProperty().addListener(o -> Utilities.reparse(textArea.getText(), webView));
-
-        //splitPane.getItems().add(0, textArea);
-        //splitPane.getItems().add(1, webView);
-
         examplesTab.setTextArea(textArea);
 
-        
         tabPane.getTabs().add(examplesTab);
         tabPane.getSelectionModel().select(examplesTab);
         textArea.setText("# Title 1\n\n" +
@@ -292,13 +274,30 @@ public class UI extends Application implements Initializable {
 
                 "**bold**\n\n" +
                 "*italics*\n\n");
-
     }
 
     @FXML
     public void aboutClicked(ActionEvent ae) {
-        drawersStack.toggle(aboutDrawer);
-        drawersStack.setMouseTransparent(false);
+        try {
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("properties/message.properties"));
+
+            JFXDialogLayout dialogLayout = new JFXDialogLayout();
+            dialogLayout.setHeading(new Text(properties.getProperty("aboutTitle")));
+            dialogLayout.setBody(new Text(properties.getProperty("aboutBody")));
+
+            JFXButton btnDialog = new JFXButton("OK");
+            btnDialog.getStyleClass().add("custom-jfx-button-raised");
+            btnDialog.setStyle("-fx-background-color: " + Utilities.toRGB(colorTheme));
+            dialogLayout.setActions(btnDialog);
+
+            JFXDialog dialog = new JFXDialog(stackPane, dialogLayout, JFXDialog.DialogTransition.TOP, false);
+            btnDialog.setOnAction(e -> dialog.close());
+
+            dialog.show();
+        } catch (IOException ingored) {
+
+        }
     }
 
 
@@ -369,6 +368,7 @@ public class UI extends Application implements Initializable {
         }
         launch(args);
     }
+
 
     public void refreshTheme() {
         String colorThemeString = Utilities.toRGB(colorTheme), colorThemeStringBrighter = Utilities.toRGB(colorTheme.brighter().brighter());
