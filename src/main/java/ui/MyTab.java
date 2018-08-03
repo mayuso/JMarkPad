@@ -21,6 +21,7 @@ import utilities.Utilities;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
@@ -153,6 +154,10 @@ public class MyTab extends Tab {
 
             File file = fc.showSaveDialog(new Stage());
             save(file);
+			
+			folderPath = file.getParent();
+			properties.setProperty("folderPath", String.valueOf(folderPath));
+			properties.store(new FileOutputStream("jmarkpad.properties"), null);
         } catch (Exception e) {
             e.printStackTrace();
         }
