@@ -11,11 +11,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.web.HTMLEditor;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -101,18 +105,22 @@ public class UI extends Application implements Initializable {
     }
 
     private void loadConfig() {
+        File jmarkpadProperties = new File("jmarkpad.properties");
+
         try {
-            if (!new File("jmarkpad.properties").exists())
+            if (!jmarkpadProperties.exists())
             {
-                Files.copy(Paths.get("properties/default.properties"), Paths.get("jmarkpad.properties"));
+                jmarkpadProperties = Utilities.createJMarkPadProperties();
             }
 
             Properties properties = new Properties();
-            properties.load(new FileInputStream("jmarkpad.properties"));
+            properties.load(new FileInputStream(jmarkpadProperties));
+
             stage.setX(Double.valueOf(properties.getProperty("posX", "0")));
             stage.setY(Double.valueOf(properties.getProperty("posY", "0")));
             stage.setWidth(Double.valueOf(properties.getProperty("width", "800")));
             stage.setHeight(Double.valueOf(properties.getProperty("height", "600")));
+
             colorTheme = new Color(
                     Double.valueOf(properties.getProperty("red", "0")),
                     Double.valueOf(properties.getProperty("green", "0.59")),
@@ -278,28 +286,33 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void aboutClicked(ActionEvent ae) {
-        try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream("properties/message.properties"));
+        JFXDialogLayout dialogLayout = new JFXDialogLayout();
 
-            JFXDialogLayout dialogLayout = new JFXDialogLayout();
-            dialogLayout.setHeading(new Text(properties.getProperty("aboutTitle")));
-            dialogLayout.setBody(new Text(properties.getProperty("aboutBody")));
+        String title = "JMarkPad";
+        dialogLayout.setHeading(new Text(title));
 
-            JFXButton btnDialog = new JFXButton("OK");
-            btnDialog.getStyleClass().add("custom-jfx-button-raised");
-            btnDialog.setStyle("-fx-background-color: " + Utilities.toRGB(colorTheme));
-            dialogLayout.setActions(btnDialog);
+        String body = "Why?\n" +
+                "I created JMarkPad as a tool to experiment with JavaFX.\n" +
+                "I kept adding functionalities to it until somehow became a useful tool.\n\n" +
+                "Source code\n" +
+                "Find the full source code and additional in the following github repository\n" +
+                "https://github.com/mayuso/JMarkPad\n\n" +
+                "Found a bug?\n" +
+                "Please feel free to open a new issue in our github issue tracker\n" +
+                "https://github.com/mayuso/JMarkPad/issues\n\n" +
+                "Thank you for using JMarkPad :)";
+        dialogLayout.setBody(new Text(body));
 
-            JFXDialog dialog = new JFXDialog(stackPane, dialogLayout, JFXDialog.DialogTransition.TOP, false);
-            btnDialog.setOnAction(e -> dialog.close());
+        JFXButton btnDialog = new JFXButton("OK");
+        btnDialog.getStyleClass().add("custom-jfx-button-raised");
+        btnDialog.setStyle("-fx-background-color: " + Utilities.toRGB(colorTheme));
+        dialogLayout.setActions(btnDialog);
 
-            dialog.show();
-        } catch (IOException ingored) {
+        JFXDialog dialog = new JFXDialog(stackPane, dialogLayout, JFXDialog.DialogTransition.TOP, false);
+        btnDialog.setOnAction(e -> dialog.close());
 
-        }
+        dialog.show();
     }
-
 
     private boolean isFileIsAlreadyOpen(String filePath) {
         boolean result = false;
@@ -312,7 +325,6 @@ public class UI extends Application implements Initializable {
         }
         return result;
     }
-
 
     private void openFileIntoTab(File file, MyTab tab) throws IOException {
 
