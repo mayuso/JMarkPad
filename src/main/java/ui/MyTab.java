@@ -158,6 +158,7 @@ public class MyTab extends Tab {
 			folderPath = file.getParent();
 			properties.setProperty("folderPath", String.valueOf(folderPath));
 			properties.store(new FileOutputStream("jmarkpad.properties"), null);
+			
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -123,15 +123,18 @@ public class UI extends Application implements Initializable {
             String pathFiles = properties.getProperty("filePaths");
 
             for (String path : pathFiles.split(";")){
-                MyTab tab = new MyTab(new File(path).getName(), tabPane, colorTheme);
-                File file = new File(path);
+				if(path.length()>1){
+					MyTab tab = new MyTab(new File(path).getName(), tabPane, colorTheme);
+					File file = new File(path);
+					
+					
+					openFileIntoTab(file, tab);
 
-                openFileIntoTab(file, tab);
+					tab.setFilePath(file.getAbsolutePath());
 
-                tab.setFilePath(file.getAbsolutePath());
-
-                tabPane.getTabs().add(tab);
-                tabPane.getSelectionModel().select(tab);
+					tabPane.getTabs().add(tab);
+					tabPane.getSelectionModel().select(tab);
+				}
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -203,8 +206,7 @@ public class UI extends Application implements Initializable {
 
             if (file != null) {
                 folderPath = file.getParent();
-				System.out.println(folderPath);
-                if (!isFileIsAlreadyOpen(file.getAbsolutePath())) {
+                if (!fileIsAlreadyOpened(file.getAbsolutePath())) {
                     MyTab tab = new MyTab(file.getName(), tabPane, colorTheme);
                     openFileIntoTab(file, tab);
                     tab.setFilePath(file.getAbsolutePath());
@@ -299,7 +301,7 @@ public class UI extends Application implements Initializable {
     }
 
 
-    private boolean isFileIsAlreadyOpen(String filePath) {
+    private boolean fileIsAlreadyOpened(String filePath) {
         boolean result = false;
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
             MyTab currentlyOpenTab = (MyTab) tabPane.getTabs().get(i);
