@@ -14,13 +14,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utilities.Utilities;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Properties;
 
 
 public class MyTab extends Tab {
@@ -105,20 +108,54 @@ public class MyTab extends Tab {
 
 
     void checkSaveInCurrentPath() {
-        File file;
-        if (filePath.equals("")) {
-            file = Utilities.fileChooser.showSaveDialog(new Stage());
+        File file = null;
+        if (filePath.isEmpty()) {
+            try {
+                FileChooser fc = new FileChooser();
+                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
+                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+                fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
+
+                Properties properties = new Properties();
+                properties.load(new FileInputStream("jmarkpad.properties"));
+                String folderPath = properties.getProperty("folderPath");
+
+                if (folderPath != null) {
+                    fc.setInitialDirectory(new File(folderPath));
+                }
+
+                file = fc.showSaveDialog(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } else {
             file = new File(filePath);
         }
+
         save(file);
 
     }
 
     void saveAs() {
-        File file = Utilities.fileChooser.showSaveDialog(new Stage());
-        save(file);
+        try {
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
 
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("jmarkpad.properties"));
+            String folderPath = properties.getProperty("folderPath");
+
+            if (folderPath != null) {
+                fc.setInitialDirectory(new File(folderPath));
+            }
+
+            File file = fc.showSaveDialog(new Stage());
+            save(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     private void save(File file){
         if (file != null) {
