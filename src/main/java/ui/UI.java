@@ -24,8 +24,6 @@ import utilities.Utilities;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -46,7 +44,7 @@ public class UI extends Application implements Initializable {
     public JFXDrawer optionsDrawer, aboutDrawer;
 
     public Color colorTheme;
-    private JFXDecorator decorator;
+    private JMPDecorator decorator;
 
     private String folderPath;
 
@@ -59,7 +57,10 @@ public class UI extends Application implements Initializable {
             fxmlLoader.setController(this);
             Parent root = (Region) fxmlLoader.load();
 
-            decorator = new JFXDecorator(stage, root);
+            decorator = new JMPDecorator(stage, root);
+            decorator.setTitle("JMarkPad");
+            decorator.setBtnFullscreenVisible(false);
+            decorator.setCustomMaximize(true);
 
             Scene scene = new Scene(decorator, 800, 600);
 
@@ -76,7 +77,7 @@ public class UI extends Application implements Initializable {
 
 
             if (!receivedPath.equals("")) {
-                MyTab tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
+                JMPTab tab = new JMPTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
                         tabPane, colorTheme);
                 try {
                     openFileIntoTab(new File(receivedPath), tab);
@@ -87,7 +88,7 @@ public class UI extends Application implements Initializable {
             } else {
 
                 if (tabPane.getTabs().size() < 1) {
-                    MyTab tab = new MyTab("New 1", tabPane, colorTheme);
+                    JMPTab tab = new JMPTab("New 1", tabPane, colorTheme);
                     tabPane.getTabs().add(tab);
                 }
             }
@@ -124,7 +125,7 @@ public class UI extends Application implements Initializable {
 
             for (String path : pathFiles.split(";")){
 				if(path.length()>1){
-					MyTab tab = new MyTab(new File(path).getName(), tabPane, colorTheme);
+					JMPTab tab = new JMPTab(new File(path).getName(), tabPane, colorTheme);
 					File file = new File(path);
 					
 					
@@ -184,7 +185,7 @@ public class UI extends Application implements Initializable {
         }
 
 
-        MyTab tab = new MyTab(newFileName, tabPane, colorTheme);
+        JMPTab tab = new JMPTab(newFileName, tabPane, colorTheme);
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -207,7 +208,7 @@ public class UI extends Application implements Initializable {
             if (file != null) {
                 folderPath = file.getParent();
                 if (!fileIsAlreadyOpened(file.getAbsolutePath())) {
-                    MyTab tab = new MyTab(file.getName(), tabPane, colorTheme);
+                    JMPTab tab = new JMPTab(file.getName(), tabPane, colorTheme);
                     openFileIntoTab(file, tab);
                     tab.setFilePath(file.getAbsolutePath());
 
@@ -223,27 +224,27 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void saveClicked(ActionEvent ae) {
-        ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
+        ((JMPTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
     }
 
     @FXML
     public void saveAllClicked(ActionEvent ae) {
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).checkSaveInCurrentPath();
+            ((JMPTab) tabPane.getTabs().get(i)).checkSaveInCurrentPath();
         }
     }
 
     @FXML
     public void saveAsClicked(ActionEvent ae) {
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).saveAs();
+            ((JMPTab) tabPane.getTabs().get(i)).saveAs();
         }
     }
 
     @FXML
     public void closeClicked(ActionEvent ae) {
-        if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
-            ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
+        if (!((JMPTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
+            ((JMPTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
         }
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
     }
@@ -257,7 +258,7 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void markDownHelpClicked(ActionEvent ae) {
-        MyTab examplesTab = new MyTab("Examples", tabPane, colorTheme);
+        JMPTab examplesTab = new JMPTab("Examples", tabPane, colorTheme);
         JFXTextArea textArea = new JFXTextArea();
         examplesTab.setTextArea(textArea);
 
@@ -304,7 +305,7 @@ public class UI extends Application implements Initializable {
     private boolean fileIsAlreadyOpened(String filePath) {
         boolean result = false;
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            MyTab currentlyOpenTab = (MyTab) tabPane.getTabs().get(i);
+            JMPTab currentlyOpenTab = (JMPTab) tabPane.getTabs().get(i);
             if (currentlyOpenTab.getFilePath().equals(filePath)) {
                 tabPane.getSelectionModel().select(i);
                 result = true;
@@ -314,7 +315,7 @@ public class UI extends Application implements Initializable {
     }
 
 
-    private void openFileIntoTab(File file, MyTab tab) throws IOException {
+    private void openFileIntoTab(File file, JMPTab tab) throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String text;
@@ -371,7 +372,7 @@ public class UI extends Application implements Initializable {
         String filePaths = new String();
 
         for (Tab tab : tabPane.getTabs()) {
-            MyTab mTab = (MyTab) tab;
+            JMPTab mTab = (JMPTab) tab;
             filePaths = filePaths.concat(mTab.getFilePath() + ";");
 
             if (!mTab.isSaved) {

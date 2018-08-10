@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 
-public class MyTab extends Tab {
+public class JMPTab extends Tab {
 
     private JFXButton btnClose;
     private SplitPane splitPane;
@@ -42,7 +42,7 @@ public class MyTab extends Tab {
     private String filePath = "";
     boolean isSaved = true;
 
-    MyTab(String name, JFXTabPane tabPane, Color colorTheme) {
+    JMPTab(String name, JFXTabPane tabPane, Color colorTheme) {
         super(name);
         this.colorTheme=colorTheme;
         splitPane = new SplitPane();
