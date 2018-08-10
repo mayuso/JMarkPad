@@ -102,38 +102,39 @@ public class UI extends Application implements Initializable {
 
     private void loadConfig() {
         try {
-            if (!new File("jmarkpad.properties").exists())
-            {
-                Files.copy(Paths.get("properties/default.properties"), Paths.get("jmarkpad.properties"));
-            }
+            if (!new File("jmarkpad.properties").exists()){
+				createPropertiesFile("", true);
+			}
 
             Properties properties = new Properties();
             properties.load(new FileInputStream("jmarkpad.properties"));
-            stage.setX(Double.valueOf(properties.getProperty("posX", "0")));
-            stage.setY(Double.valueOf(properties.getProperty("posY", "0")));
-            stage.setWidth(Double.valueOf(properties.getProperty("width", "800")));
-            stage.setHeight(Double.valueOf(properties.getProperty("height", "600")));
+            stage.setX(Double.valueOf(properties.getProperty("posX")));
+            stage.setY(Double.valueOf(properties.getProperty("posY")));
+            stage.setWidth(Double.valueOf(properties.getProperty("width")));
+            stage.setHeight(Double.valueOf(properties.getProperty("height")));
             colorTheme = new Color(
-                    Double.valueOf(properties.getProperty("red", "0")),
-                    Double.valueOf(properties.getProperty("green", "0.59")),
-                    Double.valueOf(properties.getProperty("blu", "0.65")),
-                    Double.valueOf(properties.getProperty("alpha", "1"))
+                    Double.valueOf(properties.getProperty("red")),
+                    Double.valueOf(properties.getProperty("green")),
+                    Double.valueOf(properties.getProperty("blu")),
+                    Double.valueOf(properties.getProperty("alpha"))
             );
 
             folderPath = properties.getProperty("folderPath");
             String pathFiles = properties.getProperty("filePaths");
 
-            for (String path : pathFiles.split(";"))
-            {
-                MyTab tab = new MyTab(new File(path).getName(), tabPane, colorTheme);
-                File file = new File(path);
+            for (String path : pathFiles.split(";")){
+				if(path.length()>1){
+					MyTab tab = new MyTab(new File(path).getName(), tabPane, colorTheme);
+					File file = new File(path);
+					
+					
+					openFileIntoTab(file, tab);
 
-                openFileIntoTab(file, tab);
+					tab.setFilePath(file.getAbsolutePath());
 
-                tab.setFilePath(file.getAbsolutePath());
-
-                tabPane.getTabs().add(tab);
-                tabPane.getSelectionModel().select(tab);
+					tabPane.getTabs().add(tab);
+					tabPane.getSelectionModel().select(tab);
+				}
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -205,8 +206,7 @@ public class UI extends Application implements Initializable {
 
             if (file != null) {
                 folderPath = file.getParent();
-
-                if (!isFileIsAlreadyOpen(file.getAbsolutePath())) {
+                if (!fileIsAlreadyOpened(file.getAbsolutePath())) {
                     MyTab tab = new MyTab(file.getName(), tabPane, colorTheme);
                     openFileIntoTab(file, tab);
                     tab.setFilePath(file.getAbsolutePath());
@@ -301,7 +301,7 @@ public class UI extends Application implements Initializable {
     }
 
 
-    private boolean isFileIsAlreadyOpen(String filePath) {
+    private boolean fileIsAlreadyOpened(String filePath) {
         boolean result = false;
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
             MyTab currentlyOpenTab = (MyTab) tabPane.getTabs().get(i);
@@ -327,7 +327,45 @@ public class UI extends Application implements Initializable {
         bufferedReader.close();
 
     }
-
+	private void createPropertiesFile(String filePaths, boolean isNewFile){
+		Properties properties = new Properties();
+		if(isNewFile){
+			
+            properties.setProperty("posX", "0");
+            properties.setProperty("posY", "0");
+            properties.setProperty("width", "800");
+            properties.setProperty("height", "600");
+            properties.setProperty("red", "0");
+            properties.setProperty("green", "0.59");
+            properties.setProperty("blu", "0.65");
+            properties.setProperty("alpha", "1");
+            properties.setProperty("folderPath", System.getProperty("user.dir"));
+            properties.setProperty("filePaths", "");
+      
+		}else{
+			try {
+           
+				properties.setProperty("posX", String.valueOf(stage.getX()));
+				properties.setProperty("posY", String.valueOf(stage.getY()));
+				properties.setProperty("width", String.valueOf(stage.getWidth()));
+				properties.setProperty("height", String.valueOf(stage.getHeight()));
+				properties.setProperty("red", String.valueOf(colorTheme.getRed()));
+				properties.setProperty("green", String.valueOf(colorTheme.getGreen()));
+				properties.setProperty("blu", String.valueOf(colorTheme.getBlue()));
+				properties.setProperty("alpha", String.valueOf(colorTheme.getOpacity()));
+				properties.setProperty("folderPath", String.valueOf(folderPath));
+				properties.setProperty("filePaths", String.valueOf(filePaths));
+            
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		try{
+			properties.store(new FileOutputStream("jmarkpad.properties"), null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
     @Override
     public void stop() {
         String filePaths = new String();
@@ -341,22 +379,7 @@ public class UI extends Application implements Initializable {
             }
         }
 
-        try {
-            Properties properties = new Properties();
-            properties.setProperty("posX", String.valueOf(stage.getX()));
-            properties.setProperty("posY", String.valueOf(stage.getY()));
-            properties.setProperty("width", String.valueOf(stage.getWidth()));
-            properties.setProperty("height", String.valueOf(stage.getHeight()));
-            properties.setProperty("red", String.valueOf(colorTheme.getRed()));
-            properties.setProperty("green", String.valueOf(colorTheme.getGreen()));
-            properties.setProperty("blu", String.valueOf(colorTheme.getBlue()));
-            properties.setProperty("alpha", String.valueOf(colorTheme.getOpacity()));
-            properties.setProperty("folderPath", String.valueOf(folderPath));
-            properties.setProperty("filePaths", String.valueOf(filePaths));
-            properties.store(new FileOutputStream("jmarkpad.properties"), null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        createPropertiesFile(filePaths, false);
 
         System.exit(0);
     }
