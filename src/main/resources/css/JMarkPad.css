@@ -12,7 +12,11 @@
 }
 
 .tab-button {
-    -fx-text-fill: white;
+    -fx-text-fill: WHITE;
+}
+
+.tab-button:hover {
+    -fx-background-color: -fx-decorator-color;
 }
 
 .custom-jfx-button-raised {

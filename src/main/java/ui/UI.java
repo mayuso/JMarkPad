@@ -398,9 +398,6 @@ public class UI extends Application implements Initializable {
         decorator.setStyle("-fx-decorator-color: " + colorThemeString + ";");
         menuBar.setStyle("-fx-background-color: " + colorThemeString + ";");
         tabPane.setStyle("tab-header-background: " + colorThemeStringBrighter + ";");
-        for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).updateButtonColor(colorTheme);
-        }
     }
 
 }
