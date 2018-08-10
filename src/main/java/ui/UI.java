@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
@@ -279,26 +280,33 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void aboutClicked(ActionEvent ae) {
-        try {
-            Properties properties = new Properties();
-            properties.load(new FileInputStream("properties/message.properties"));
+        JFXDialogLayout dialogLayout = new JFXDialogLayout();
 
-            JFXDialogLayout dialogLayout = new JFXDialogLayout();
-            dialogLayout.setHeading(new Text(properties.getProperty("aboutTitle")));
-            dialogLayout.setBody(new Text(properties.getProperty("aboutBody")));
+        String title = "JMarkPad";
+        dialogLayout.setHeading(new Text(title));
 
-            JFXButton btnDialog = new JFXButton("OK");
-            btnDialog.getStyleClass().add("custom-jfx-button-raised");
-            btnDialog.setStyle("-fx-background-color: " + Utilities.toRGB(colorTheme));
-            dialogLayout.setActions(btnDialog);
+        String body = "Why?\n" +
+                "I created JMarkPad as a tool to experiment with JavaFX.\n" +
+                "I kept adding functionalities to it until somehow became a useful tool.\n\n" +
+                "Source code\n" +
+                "Find the full source code and additional in the following github repository\n" +
+                "https://github.com/mayuso/JMarkPad\n\n" +
+                "Found a bug?\n" +
+                "Please feel free to open a new issue in our github issue tracker\n" +
+                "https://github.com/mayuso/JMarkPad/issues\n\n" +
+                "Thank you for using JMarkPad :)";
+        dialogLayout.setBody(new Text(body));
 
-            JFXDialog dialog = new JFXDialog(stackPane, dialogLayout, JFXDialog.DialogTransition.TOP, false);
-            btnDialog.setOnAction(e -> dialog.close());
+        JFXButton btnDialog = new JFXButton("OK");
+        btnDialog.setCursor(Cursor.HAND);
 
-            dialog.show();
-        } catch (IOException ingored) {
+        btnDialog.getStyleClass().add("custom-jfx-button-raised");
+        dialogLayout.setActions(btnDialog);
 
-        }
+        JFXDialog dialog = new JFXDialog(stackPane, dialogLayout, JFXDialog.DialogTransition.TOP, false);
+        btnDialog.setOnAction(e -> dialog.close());
+
+        dialog.show();
     }
 
 
