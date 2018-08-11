@@ -44,7 +44,9 @@ public class UI extends Application implements Initializable {
     private static String receivedPath = "";
     public JFXDrawer optionsDrawer, aboutDrawer;
 
-    public Color colorTheme;
+    public String primaryColor;
+    public String secondaryColor;
+
     private JMPDecorator decorator;
 
     private String folderPath;
@@ -79,7 +81,7 @@ public class UI extends Application implements Initializable {
 
             if (!receivedPath.equals("")) {
                 JMPTab tab = new JMPTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
-                        tabPane, colorTheme);
+                        tabPane);
                 try {
                     openFileIntoTab(new File(receivedPath), tab);
                     tab.setFilePath(receivedPath);
@@ -89,7 +91,7 @@ public class UI extends Application implements Initializable {
             } else {
 
                 if (tabPane.getTabs().size() < 1) {
-                    JMPTab tab = new JMPTab("New 1", tabPane, colorTheme);
+                    JMPTab tab = new JMPTab("New 1", tabPane);
                     tabPane.getTabs().add(tab);
                 }
             }
@@ -104,9 +106,9 @@ public class UI extends Application implements Initializable {
 
     private void loadConfig() {
         try {
-            if (!new File("jmarkpad.properties").exists()){
-				createPropertiesFile("", true);
-			}
+            if (!new File("jmarkpad.properties").exists()) {
+                createPropertiesFile("", true);
+            }
 
             Properties properties = new Properties();
             properties.load(new FileInputStream("jmarkpad.properties"));
@@ -114,29 +116,26 @@ public class UI extends Application implements Initializable {
             stage.setY(Double.valueOf(properties.getProperty("posY")));
             stage.setWidth(Double.valueOf(properties.getProperty("width")));
             stage.setHeight(Double.valueOf(properties.getProperty("height")));
-            colorTheme = new Color(
-                    Double.valueOf(properties.getProperty("red")),
-                    Double.valueOf(properties.getProperty("green")),
-                    Double.valueOf(properties.getProperty("blu")),
-                    Double.valueOf(properties.getProperty("alpha"))
-            );
+
+            primaryColor = String.valueOf(properties.getProperty("primaryColor"));
+            secondaryColor = String.valueOf(properties.getProperty("secondaryColor"));
 
             folderPath = properties.getProperty("folderPath");
             String pathFiles = properties.getProperty("filePaths");
 
-            for (String path : pathFiles.split(";")){
-				if(path.length()>1){
-					JMPTab tab = new JMPTab(new File(path).getName(), tabPane, colorTheme);
-					File file = new File(path);
-					
-					
-					openFileIntoTab(file, tab);
+            for (String path : pathFiles.split(";")) {
+                if (path.length() > 1) {
+                    JMPTab tab = new JMPTab(new File(path).getName(), tabPane);
+                    File file = new File(path);
 
-					tab.setFilePath(file.getAbsolutePath());
 
-					tabPane.getTabs().add(tab);
-					tabPane.getSelectionModel().select(tab);
-				}
+                    openFileIntoTab(file, tab);
+
+                    tab.setFilePath(file.getAbsolutePath());
+
+                    tabPane.getTabs().add(tab);
+                    tabPane.getSelectionModel().select(tab);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -186,7 +185,7 @@ public class UI extends Application implements Initializable {
         }
 
 
-        JMPTab tab = new JMPTab(newFileName, tabPane, colorTheme);
+        JMPTab tab = new JMPTab(newFileName, tabPane);
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -209,7 +208,7 @@ public class UI extends Application implements Initializable {
             if (file != null) {
                 folderPath = file.getParent();
                 if (!fileIsAlreadyOpened(file.getAbsolutePath())) {
-                    JMPTab tab = new JMPTab(file.getName(), tabPane, colorTheme);
+                    JMPTab tab = new JMPTab(file.getName(), tabPane);
                     openFileIntoTab(file, tab);
                     tab.setFilePath(file.getAbsolutePath());
 
@@ -259,7 +258,7 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void markDownHelpClicked(ActionEvent ae) {
-        JMPTab examplesTab = new JMPTab("Examples", tabPane, colorTheme);
+        JMPTab examplesTab = new JMPTab("Examples", tabPane);
         JFXTextArea textArea = new JFXTextArea();
         examplesTab.setTextArea(textArea);
 
@@ -309,7 +308,6 @@ public class UI extends Application implements Initializable {
         dialog.show();
     }
 
-
     private boolean fileIsAlreadyOpened(String filePath) {
         boolean result = false;
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
@@ -321,7 +319,6 @@ public class UI extends Application implements Initializable {
         }
         return result;
     }
-
 
     private void openFileIntoTab(File file, JMPTab tab) throws IOException {
 
@@ -336,45 +333,43 @@ public class UI extends Application implements Initializable {
         bufferedReader.close();
 
     }
-	private void createPropertiesFile(String filePaths, boolean isNewFile){
-		Properties properties = new Properties();
-		if(isNewFile){
-			
+
+    private void createPropertiesFile(String filePaths, boolean isNewFile) {
+        Properties properties = new Properties();
+        if (isNewFile) {
             properties.setProperty("posX", "0");
             properties.setProperty("posY", "0");
             properties.setProperty("width", "800");
             properties.setProperty("height", "600");
-            properties.setProperty("red", "0");
-            properties.setProperty("green", "0.59");
-            properties.setProperty("blu", "0.65");
-            properties.setProperty("alpha", "1");
+
+            properties.setProperty("primaryColor", "#26c6da");
+            properties.setProperty("secondaryColor", "#2ce8ffff");
+
             properties.setProperty("folderPath", System.getProperty("user.dir"));
             properties.setProperty("filePaths", "");
-      
-		}else{
-			try {
-           
-				properties.setProperty("posX", String.valueOf(stage.getX()));
-				properties.setProperty("posY", String.valueOf(stage.getY()));
-				properties.setProperty("width", String.valueOf(stage.getWidth()));
-				properties.setProperty("height", String.valueOf(stage.getHeight()));
-				properties.setProperty("red", String.valueOf(colorTheme.getRed()));
-				properties.setProperty("green", String.valueOf(colorTheme.getGreen()));
-				properties.setProperty("blu", String.valueOf(colorTheme.getBlue()));
-				properties.setProperty("alpha", String.valueOf(colorTheme.getOpacity()));
-				properties.setProperty("folderPath", String.valueOf(folderPath));
-				properties.setProperty("filePaths", String.valueOf(filePaths));
-            
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try{
-			properties.store(new FileOutputStream("jmarkpad.properties"), null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        } else {
+            try {
+                properties.setProperty("posX", String.valueOf(stage.getX()));
+                properties.setProperty("posY", String.valueOf(stage.getY()));
+                properties.setProperty("width", String.valueOf(stage.getWidth()));
+                properties.setProperty("height", String.valueOf(stage.getHeight()));
+
+                properties.setProperty("primaryColor", String.valueOf(primaryColor));
+                properties.setProperty("secondaryColor", String.valueOf(secondaryColor));
+
+                properties.setProperty("folderPath", String.valueOf(folderPath));
+                properties.setProperty("filePaths", String.valueOf(filePaths));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            properties.store(new FileOutputStream("jmarkpad.properties"), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void stop() {
         String filePaths = new String();
@@ -393,7 +388,6 @@ public class UI extends Application implements Initializable {
         System.exit(0);
     }
 
-
     public static void main(String[] args) {
         if (args.length > 0) {
             receivedPath = args[0];
@@ -401,12 +395,10 @@ public class UI extends Application implements Initializable {
         launch(args);
     }
 
-
     public void refreshTheme() {
-        String colorThemeString = Utilities.toRGB(colorTheme), colorThemeStringBrighter = Utilities.toRGB(colorTheme.brighter().brighter());
-        decorator.setStyle("-fx-decorator-color: " + colorThemeString + ";");
-        menuBar.setStyle("-fx-background-color: " + colorThemeString + ";");
-        tabPane.setStyle("tab-header-background: " + colorThemeStringBrighter + ";");
+        decorator.setStyle("-fx-decorator-color: " + primaryColor);
+        menuBar.setStyle("-fx-background-color: " + primaryColor);
+        tabPane.setStyle("tab-header-background: " + secondaryColor);
     }
 
 }

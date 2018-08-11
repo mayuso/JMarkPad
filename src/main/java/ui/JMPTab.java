@@ -36,15 +36,11 @@ public class JMPTab extends Tab {
     private JFXTextArea textArea;
     private WebView webView;
 
-
-    private Color colorTheme;
-
     private String filePath = "";
     boolean isSaved = true;
 
-    JMPTab(String name, JFXTabPane tabPane, Color colorTheme) {
+    JMPTab(String name, JFXTabPane tabPane) {
         super(name);
-        this.colorTheme=colorTheme;
         splitPane = new SplitPane();
         setTextArea(new JFXTextArea());
         setWebView(new WebView());
@@ -104,7 +100,6 @@ public class JMPTab extends Tab {
             Scene saveFileConfirmationScene = new Scene(saveFileConfirmationDecorator);
 
             saveFileConfirmationScene.getStylesheets().add("/css/JMarkPad.css");
-            saveFileConfirmationDecorator.setStyle("-fx-decorator-color: " + Utilities.toRGB(colorTheme) + ";");
             saveFileConfirmationStage.setScene(saveFileConfirmationScene);
             saveFileConfirmationStage.setResizable(false);
             saveFileConfirmationStage.showAndWait();
