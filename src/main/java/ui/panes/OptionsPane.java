@@ -7,16 +7,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import ui.UI;
 
 import java.io.IOException;
 
 public class OptionsPane extends StackPane {
+
     @FXML
     private  JFXColorPicker colorPicker;
     @FXML
     private JFXButton backButton;
-
 
     public OptionsPane(UI ui) {
 
@@ -28,7 +29,7 @@ public class OptionsPane extends StackPane {
 
             addListeners(ui);
 
-            colorPicker.setValue(ui.colorTheme);
+            colorPicker.setValue(Color.web(ui.primaryColor));
             getChildren().add(root);
 
         } catch (IOException e) {
@@ -38,7 +39,9 @@ public class OptionsPane extends StackPane {
 
     private void addListeners(UI ui) {
         colorPicker.setOnAction(t -> {
-            ui.colorTheme = colorPicker.getValue();
+            Color color = colorPicker.getValue();
+            ui.primaryColor = String.valueOf(color).replace("0x", "#");
+            ui.secondaryColor = String.valueOf(color.brighter().brighter()).replace("0x", "#");
             ui.refreshTheme();
         });
 

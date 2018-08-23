@@ -4,8 +4,10 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDecorator;
 import com.jfoenix.controls.JFXTabPane;
 import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.svg.SVGGlyph;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -27,30 +29,27 @@ import java.io.IOException;
 import java.util.Properties;
 
 
-public class MyTab extends Tab {
+public class JMPTab extends Tab {
 
-    private JFXButton button;
+    private JFXButton btnClose;
     private SplitPane splitPane;
     private JFXTextArea textArea;
     private WebView webView;
 
-
-    private Color colorTheme;
-
     private String filePath = "";
     boolean isSaved = true;
 
-    MyTab(String name, JFXTabPane tabPane, Color colorTheme) {
+    JMPTab(String name, JFXTabPane tabPane) {
         super(name);
-        this.colorTheme=colorTheme;
         splitPane = new SplitPane();
         setTextArea(new JFXTextArea());
         setWebView(new WebView());
 
         addListeners();
+        createTabButton();
 
         setContent(splitPane);
-        setGraphic(createTabButton(colorTheme));
+        setGraphic(btnClose);
 
         ((JFXButton) getGraphic()).setOnAction(e -> {
             if (!isSaved) {
@@ -60,15 +59,17 @@ public class MyTab extends Tab {
         });
 
     }
-    private JFXButton createTabButton(Color colorTheme) {
-        button = new JFXButton();
+    private void createTabButton() {
+        SVGGlyph close = new SVGGlyph(0,
+                "CLOSE",
+                "M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z",
+                Color.WHITE);
+        close.setSize(12, 12);
 
-        button.setText("X");
-        button.setPrefWidth(10);
-        button.setPrefHeight(10);
-        button.getStyleClass().add("tab-button");
-        updateButtonColor(colorTheme);
-        return button;
+        this.btnClose = new JFXButton();
+        this.btnClose.getStyleClass().add("tab-button");
+        this.btnClose.setCursor(Cursor.HAND);
+        this.btnClose.setGraphic(close);
     }
 
     private void addListeners() {
@@ -99,7 +100,6 @@ public class MyTab extends Tab {
             Scene saveFileConfirmationScene = new Scene(saveFileConfirmationDecorator);
 
             saveFileConfirmationScene.getStylesheets().add("/css/JMarkPad.css");
-            saveFileConfirmationDecorator.setStyle("-fx-decorator-color: " + Utilities.toRGB(colorTheme) + ";");
             saveFileConfirmationStage.setScene(saveFileConfirmationScene);
             saveFileConfirmationStage.setResizable(false);
             saveFileConfirmationStage.showAndWait();
@@ -177,14 +177,6 @@ public class MyTab extends Tab {
                 ex.printStackTrace();
             }
         }
-    }
-
-
-
-
-    void updateButtonColor(Color colorTheme){
-        this.colorTheme=colorTheme;
-        button.setStyle("-fx-background-color: " + Utilities.toRGB(colorTheme) + ";");
     }
 
     //Getters and setters
