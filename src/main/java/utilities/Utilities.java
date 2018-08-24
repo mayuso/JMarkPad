@@ -11,7 +11,7 @@ public class Utilities {
     private static Parser parser;
     private static HtmlRenderer renderer;
 
-    public Utilities() {
+    static {
         MutableDataSet options = new MutableDataSet();
         parser = Parser.builder(options).build();
         renderer = HtmlRenderer.builder(options).build();
@@ -20,12 +20,5 @@ public class Utilities {
     public static String reparse(String text) {
         Node document = parser.parse(text.replace("\n", "\n\n"));
         return renderer.render(document);
-    }
-
-    public static String toRGB(Color color) {
-        return String.format("#%02X%02X%02X",
-                (int) (color.getRed() * 255),
-                (int) (color.getGreen() * 255),
-                (int) (color.getBlue() * 255));
     }
 }

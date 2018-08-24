@@ -3,6 +3,8 @@ package ui;
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,19 +17,16 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ui.panes.OptionsPane;
-import utilities.Utilities;
 
 import java.io.*;
 import java.net.URL;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
 
 public class UI extends Application implements Initializable {
 
@@ -74,7 +73,6 @@ public class UI extends Application implements Initializable {
             stage.setMinWidth(800);
             stage.setMinHeight(600);
             stage.setScene(scene);
-            new Utilities();
             loadConfig();
             loadDrawers();
 
