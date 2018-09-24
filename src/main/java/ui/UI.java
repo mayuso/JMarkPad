@@ -2,36 +2,37 @@ package ui;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.JFXDrawer.DrawerDirection;
-import io.XML;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.xml.sax.SAXException;
-import ui.panes.AboutPane;
 import ui.panes.OptionsPane;
-import utilities.Utilities;
-import utilities.VariablesToSave;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URL;
+import java.util.Properties;
 import java.util.ResourceBundle;
-
 
 public class UI extends Application implements Initializable {
 
     private Stage stage;
+    @FXML
+    public StackPane stackPane;
     @FXML
     public JFXDrawersStack drawersStack;
     @FXML
@@ -42,8 +43,12 @@ public class UI extends Application implements Initializable {
     private static String receivedPath = "";
     public JFXDrawer optionsDrawer, aboutDrawer;
 
-    public Color colorTheme;
-    private JFXDecorator decorator;
+    public String primaryColor;
+    public String secondaryColor;
+
+    private JMPDecorator decorator;
+
+    private String folderPath;
 
     @Override
     public void start(Stage stage) {
@@ -54,7 +59,10 @@ public class UI extends Application implements Initializable {
             fxmlLoader.setController(this);
             Parent root = (Region) fxmlLoader.load();
 
-            decorator = new JFXDecorator(stage, root);
+            decorator = new JMPDecorator(stage, root);
+            decorator.setTitle("JMarkPad");
+            decorator.setBtnFullscreenVisible(false);
+            decorator.setCustomMaximize(true);
 
             Scene scene = new Scene(decorator, 800, 600);
 
@@ -65,14 +73,13 @@ public class UI extends Application implements Initializable {
             stage.setMinWidth(800);
             stage.setMinHeight(600);
             stage.setScene(scene);
-            new Utilities();
-            loadXMLValues();
+            loadConfig();
             loadDrawers();
 
 
             if (!receivedPath.equals("")) {
-                MyTab tab = new MyTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
-                        tabPane, colorTheme);
+                JMPTab tab = new JMPTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
+                        tabPane);
                 try {
                     openFileIntoTab(new File(receivedPath), tab);
                     tab.setFilePath(receivedPath);
@@ -82,10 +89,11 @@ public class UI extends Application implements Initializable {
             } else {
 
                 if (tabPane.getTabs().size() < 1) {
-                    MyTab tab = new MyTab("New 1", tabPane, colorTheme);
+                    JMPTab tab = new JMPTab("New 1", tabPane);
                     tabPane.getTabs().add(tab);
                 }
             }
+
             refreshTheme();
             stage.show();
 
@@ -94,44 +102,45 @@ public class UI extends Application implements Initializable {
         }
     }
 
-    private void loadXMLValues() {
+    private void loadConfig() {
         try {
-            XML xml = new XML("jmarkpad.xml");
-            stage.setX(Double.valueOf(xml.loadVariable("posX")));
-            stage.setY(Double.valueOf(xml.loadVariable("posY")));
-            stage.setWidth(Double.valueOf(xml.loadVariable("width")));
-            stage.setHeight(Double.valueOf(xml.loadVariable("height")));
-            colorTheme = new Color(Double.valueOf(xml.loadVariable("red")),
-                    Double.valueOf(xml.loadVariable("green")),
-                    Double.valueOf(xml.loadVariable("blue")), 1);
+            if (!new File("jmarkpad.properties").exists()) {
+                createPropertiesFile("", true);
+            }
 
-            for (String path : xml.loadVariables("file")) {
-                MyTab tab = new MyTab(path.split("\\\\")[path.split("\\\\").length - 1], tabPane, colorTheme);
-                File file = new File(path);
-                try {
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("jmarkpad.properties"));
+            stage.setX(Double.valueOf(properties.getProperty("posX")));
+            stage.setY(Double.valueOf(properties.getProperty("posY")));
+            stage.setWidth(Double.valueOf(properties.getProperty("width")));
+            stage.setHeight(Double.valueOf(properties.getProperty("height")));
+
+            primaryColor = String.valueOf(properties.getProperty("primaryColor"));
+            secondaryColor = String.valueOf(properties.getProperty("secondaryColor"));
+
+            folderPath = properties.getProperty("folderPath");
+            String pathFiles = properties.getProperty("filePaths");
+
+            for (String path : pathFiles.split(";")) {
+                if (path.length() > 1) {
+                    JMPTab tab = new JMPTab(new File(path).getName(), tabPane);
+                    File file = new File(path);
+
+
                     openFileIntoTab(file, tab);
 
                     tab.setFilePath(file.getAbsolutePath());
 
                     tabPane.getTabs().add(tab);
                     tabPane.getSelectionModel().select(tab);
-                } catch (FileNotFoundException ignored) {
-
                 }
             }
-
-        } catch (SAXException | IOException | ParserConfigurationException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-
-        } catch (NullPointerException e) {
-            colorTheme = new Color((double) 0 / 255, (double) 151 / 255,
-                    (double) 167 / 255, 1);
-            System.err.println("\"jmarkpad.xml\" file not found. Creating...");
         }
     }
 
     private void loadDrawers() {
-
         drawersStack.setMouseTransparent(true);
 
         FlowPane content = new FlowPane();
@@ -146,20 +155,7 @@ public class UI extends Application implements Initializable {
         optionsDrawer.setOverLayVisible(false);
         optionsDrawer.setResizableOnDrag(true);
 
-
-        aboutDrawer = new JFXDrawer();
-
-        AboutPane aboutPane = new AboutPane(this);
-        StackPane aboutDrawerPane = new StackPane();
-        aboutDrawerPane.getChildren().add(aboutPane);
-        aboutDrawer.setDirection(DrawerDirection.RIGHT);
-        aboutDrawer.setSidePane(aboutDrawerPane);
-        aboutDrawer.setDefaultDrawerSize(750);
-        aboutDrawer.setOverLayVisible(false);
-        aboutDrawer.setResizableOnDrag(true);
-
         drawersStack.setContent(content);
-
     }
 
     @Override
@@ -187,7 +183,7 @@ public class UI extends Application implements Initializable {
         }
 
 
-        MyTab tab = new MyTab(newFileName, tabPane, colorTheme);
+        JMPTab tab = new JMPTab(newFileName, tabPane);
 
         tabPane.getTabs().add(tab);
         tabPane.getSelectionModel().select(tab);
@@ -195,56 +191,58 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void openClicked(ActionEvent ae) {
+        try {
+            FileChooser fc = new FileChooser();
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("All files (*.*)", "*.*"));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+            fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
 
-        File file = Utilities.fileChooser.showOpenDialog(stage);
-        if (file != null) {
-            if (isFileIsAlreadyOpen(file.getAbsolutePath())) {
-                return;
+            if (folderPath != null && !folderPath.isEmpty()) {
+                fc.setInitialDirectory(new File(folderPath));
             }
 
-            MyTab tab = new MyTab(file.getName(), tabPane, colorTheme);
-            try {
-                openFileIntoTab(file, tab);
-                tab.setFilePath(file.getAbsolutePath());
+            File file = fc.showOpenDialog(stage);
 
-                tabPane.getTabs().add(tab);
-                tabPane.getSelectionModel().select(tab);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (file != null) {
+                folderPath = file.getParent();
+                if (!fileIsAlreadyOpened(file.getAbsolutePath())) {
+                    JMPTab tab = new JMPTab(file.getName(), tabPane);
+                    openFileIntoTab(file, tab);
+                    tab.setFilePath(file.getAbsolutePath());
+
+                    tabPane.getTabs().add(tab);
+                    tabPane.getSelectionModel().select(tab);
+                }
             }
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
 
-
-
     @FXML
     public void saveClicked(ActionEvent ae) {
-        ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
+        ((JMPTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkSaveInCurrentPath();
     }
 
     @FXML
     public void saveAllClicked(ActionEvent ae) {
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).checkSaveInCurrentPath();
+            ((JMPTab) tabPane.getTabs().get(i)).checkSaveInCurrentPath();
         }
     }
 
     @FXML
     public void saveAsClicked(ActionEvent ae) {
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).saveAs();
+            ((JMPTab) tabPane.getTabs().get(i)).saveAs();
         }
     }
 
-
     @FXML
     public void closeClicked(ActionEvent ae) {
-
-        if (!((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
-            ((MyTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
+        if (!((JMPTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).isSaved) {
+            ((JMPTab) tabPane.getTabs().get(tabPane.getSelectionModel().getSelectedIndex())).checkIfUserWantsToSaveFile();
         }
         tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
     }
@@ -258,21 +256,10 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void markDownHelpClicked(ActionEvent ae) {
-
-        //Stage markDownHelpStage = new Stage();
-        //WebView webView = new WebView();
-        MyTab examplesTab = new MyTab("Examples", tabPane, colorTheme);
-
-        //SplitPane splitPane = new SplitPane();
+        JMPTab examplesTab = new JMPTab("Examples", tabPane);
         JFXTextArea textArea = new JFXTextArea();
-        //textArea.textProperty().addListener(o -> Utilities.reparse(textArea.getText(), webView));
-
-        //splitPane.getItems().add(0, textArea);
-        //splitPane.getItems().add(1, webView);
-
         examplesTab.setTextArea(textArea);
 
-        
         tabPane.getTabs().add(examplesTab);
         tabPane.getSelectionModel().select(examplesTab);
         textArea.setText("# Title 1\n\n" +
@@ -283,22 +270,46 @@ public class UI extends Application implements Initializable {
                 "* item 1\n" +
                 "* item 2\n" +
                 "* item 3\n\n" +
+
                 "**bold**\n\n" +
                 "*italics*\n\n");
-
     }
 
     @FXML
     public void aboutClicked(ActionEvent ae) {
-        drawersStack.toggle(aboutDrawer);
-        drawersStack.setMouseTransparent(false);
+        JFXDialogLayout dialogLayout = new JFXDialogLayout();
+
+        String title = "JMarkPad";
+        dialogLayout.setHeading(new Text(title));
+
+        String body = "Why?\n" +
+                "I created JMarkPad as a tool to experiment with JavaFX.\n" +
+                "I kept adding functionalities to it until somehow became a useful tool.\n\n" +
+                "Source code\n" +
+                "Find the full source code and additional in the following github repository\n" +
+                "https://github.com/mayuso/JMarkPad\n\n" +
+                "Found a bug?\n" +
+                "Please feel free to open a new issue in our github issue tracker\n" +
+                "https://github.com/mayuso/JMarkPad/issues\n\n" +
+                "Thank you for using JMarkPad :)";
+        dialogLayout.setBody(new Text(body));
+
+        JFXButton btnDialog = new JFXButton("OK");
+        btnDialog.setCursor(Cursor.HAND);
+
+        btnDialog.getStyleClass().add("custom-jfx-button-raised");
+        dialogLayout.setActions(btnDialog);
+
+        JFXDialog dialog = new JFXDialog(stackPane, dialogLayout, JFXDialog.DialogTransition.TOP, false);
+        btnDialog.setOnAction(e -> dialog.close());
+
+        dialog.show();
     }
 
-
-    private boolean isFileIsAlreadyOpen(String filePath) {
+    private boolean fileIsAlreadyOpened(String filePath) {
         boolean result = false;
         for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            MyTab currentlyOpenTab = (MyTab) tabPane.getTabs().get(i);
+            JMPTab currentlyOpenTab = (JMPTab) tabPane.getTabs().get(i);
             if (currentlyOpenTab.getFilePath().equals(filePath)) {
                 tabPane.getSelectionModel().select(i);
                 result = true;
@@ -307,8 +318,7 @@ public class UI extends Application implements Initializable {
         return result;
     }
 
-
-    private void openFileIntoTab(File file, MyTab tab) throws IOException {
+    private void openFileIntoTab(File file, JMPTab tab) throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
         String text;
@@ -322,41 +332,59 @@ public class UI extends Application implements Initializable {
 
     }
 
+    private void createPropertiesFile(String filePaths, boolean isNewFile) {
+        Properties properties = new Properties();
+        if (isNewFile) {
+            properties.setProperty("posX", "0");
+            properties.setProperty("posY", "0");
+            properties.setProperty("width", "800");
+            properties.setProperty("height", "600");
+
+            properties.setProperty("primaryColor", "#26c6da");
+            properties.setProperty("secondaryColor", "#2ce8ffff");
+
+            properties.setProperty("folderPath", System.getProperty("user.dir"));
+            properties.setProperty("filePaths", "");
+        } else {
+            try {
+                properties.setProperty("posX", String.valueOf(stage.getX()));
+                properties.setProperty("posY", String.valueOf(stage.getY()));
+                properties.setProperty("width", String.valueOf(stage.getWidth()));
+                properties.setProperty("height", String.valueOf(stage.getHeight()));
+
+                properties.setProperty("primaryColor", String.valueOf(primaryColor));
+                properties.setProperty("secondaryColor", String.valueOf(secondaryColor));
+
+                properties.setProperty("folderPath", String.valueOf(folderPath));
+                properties.setProperty("filePaths", String.valueOf(filePaths));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            properties.store(new FileOutputStream("jmarkpad.properties"), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void stop() {
-        String[] filePaths = new String[tabPane.getTabs().size()];
+        String filePaths = new String();
 
+        for (Tab tab : tabPane.getTabs()) {
+            JMPTab mTab = (JMPTab) tab;
+            filePaths = filePaths.concat(mTab.getFilePath() + ";");
 
-        for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            MyTab tab = (MyTab) tabPane.getTabs().get(i);
-            filePaths[i] = tab.getFilePath();
-            if (!tab.isSaved) {
-                tab.checkIfUserWantsToSaveFile();
+            if (!mTab.isSaved) {
+                mTab.checkIfUserWantsToSaveFile();
             }
         }
 
-        try {
-            XML xml = new XML("jmarkpad.xml");
-
-            VariablesToSave variablesToSave = new VariablesToSave();
-            variablesToSave.posX = stage.getX();
-            variablesToSave.posY = stage.getY();
-            variablesToSave.width = stage.getWidth();
-            variablesToSave.height = stage.getHeight();
-            variablesToSave.red = colorTheme.getRed();
-            variablesToSave.green = colorTheme.getGreen();
-            variablesToSave.blue = colorTheme.getBlue();
-            variablesToSave.paths = filePaths;
-            xml.writeVariables(variablesToSave);
-
-        } catch (SAXException | IOException | ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-
+        createPropertiesFile(filePaths, false);
 
         System.exit(0);
     }
-
 
     public static void main(String[] args) {
         if (args.length > 0) {
@@ -366,14 +394,9 @@ public class UI extends Application implements Initializable {
     }
 
     public void refreshTheme() {
-        String colorThemeString = Utilities.toRGB(colorTheme), colorThemeStringBrighter = Utilities.toRGB(colorTheme.brighter().brighter());
-        decorator.setStyle("-fx-decorator-color: " + colorThemeString + ";");
-        menuBar.setStyle("-fx-background-color: " + colorThemeString + ";");
-        tabPane.setStyle("tab-header-background: " + colorThemeStringBrighter + ";");
-        for (int i = 0; i < tabPane.getTabs().size(); i++) {
-            ((MyTab) tabPane.getTabs().get(i)).updateButtonColor(colorTheme);
-        }
+        decorator.setStyle("-fx-decorator-color: " + primaryColor);
+        menuBar.setStyle("-fx-background-color: " + primaryColor);
+        tabPane.setStyle("tab-header-background: " + secondaryColor);
     }
-
 
 }
