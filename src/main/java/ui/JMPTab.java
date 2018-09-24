@@ -1,33 +1,20 @@
 package ui;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDecorator;
-import com.jfoenix.controls.JFXTabPane;
-import com.jfoenix.controls.JFXTextArea;
+import com.jfoenix.controls.*;
 import com.jfoenix.svg.SVGGlyph;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utilities.Utilities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Properties;
-
 
 public class JMPTab extends Tab {
 
@@ -45,7 +32,7 @@ public class JMPTab extends Tab {
         setTextArea(new JFXTextArea());
         setWebView(new WebView());
 
-        addListeners();
+        setOnCloseRequest(e -> checkIfUserWantsToSaveFile());
         createTabButton();
 
         setContent(splitPane);
@@ -57,8 +44,8 @@ public class JMPTab extends Tab {
             }
             tabPane.getTabs().remove(this);
         });
-
     }
+
     private void createTabButton() {
         SVGGlyph close = new SVGGlyph(0,
                 "CLOSE",
@@ -72,41 +59,42 @@ public class JMPTab extends Tab {
         this.btnClose.setGraphic(close);
     }
 
-    private void addListeners() {
-        setOnCloseRequest(e -> checkIfUserWantsToSaveFile());
-    }
-
     void checkIfUserWantsToSaveFile() {
         if (!isSaved) {
 
-            Stage saveFileConfirmationStage = new Stage();
-            saveFileConfirmationStage.initModality(Modality.WINDOW_MODAL);
-            JFXButton buttonOk = new JFXButton("OK"), buttonCancel= new JFXButton("Cancel");
+            JFXDialogLayout dialogLayout = new JFXDialogLayout();
 
-            buttonOk.setOnAction(e -> {
+            String title = "Saving...";
+            dialogLayout.setHeading(new Text(title));
+
+            String body = "Save file \"" + getText().replace(" (*)", "") + "\" ?";
+            dialogLayout.setBody(new Text(body));
+
+            JFXButton btnYes = new JFXButton("YES");
+            JFXButton btnNo = new JFXButton("NO");
+
+            btnYes.setCursor(Cursor.HAND);
+            btnNo.setCursor(Cursor.HAND);
+
+            btnYes.getStyleClass().add("custom-jfx-button-raised");
+            btnYes.setStyle("-fx-background-color: #4caf50");
+
+            btnNo.getStyleClass().add("custom-jfx-button-raised");
+            btnNo.setStyle("-fx-background-color: #f44336");
+
+            dialogLayout.setActions(btnYes, btnNo);
+
+            JFXDialog dialog = new JFXDialog((StackPane) getTabPane().getParent(), dialogLayout, JFXDialog.DialogTransition.TOP, false);
+
+            btnYes.setOnAction(e -> {
                 checkSaveInCurrentPath();
-                saveFileConfirmationStage.close();
+                dialog.close();
             });
-            buttonCancel.setOnAction(e -> saveFileConfirmationStage.close());
+            btnNo.setOnAction(e -> dialog.close());
 
-            HBox hbox = new HBox( buttonOk, buttonCancel);
-            hbox.setPadding(new Insets(30));
-            VBox vbox = new VBox(new Text("Save file \"" + getText().replace(" (*)", "") + "\"?"), hbox);
-            vbox.setAlignment(Pos.CENTER);
-            vbox.setPadding(new Insets(30));
-
-            JFXDecorator saveFileConfirmationDecorator = new JFXDecorator(saveFileConfirmationStage, vbox);
-
-            Scene saveFileConfirmationScene = new Scene(saveFileConfirmationDecorator);
-
-            saveFileConfirmationScene.getStylesheets().add("/css/JMarkPad.css");
-            saveFileConfirmationStage.setScene(saveFileConfirmationScene);
-            saveFileConfirmationStage.setResizable(false);
-            saveFileConfirmationStage.showAndWait();
-
+            dialog.show();
         }
     }
-
 
     void checkSaveInCurrentPath() {
         File file = null;
@@ -154,16 +142,17 @@ public class JMPTab extends Tab {
 
             File file = fc.showSaveDialog(new Stage());
             save(file);
-			
-			folderPath = file.getParent();
-			properties.setProperty("folderPath", String.valueOf(folderPath));
-			properties.store(new FileOutputStream("jmarkpad.properties"), null);
-			
+
+            folderPath = file.getParent();
+            properties.setProperty("folderPath", String.valueOf(folderPath));
+            properties.store(new FileOutputStream("jmarkpad.properties"), null);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    private void save(File file){
+
+    private void save(File file) {
         if (file != null) {
             try {
                 FileWriter fileWriter = new FileWriter(file);
