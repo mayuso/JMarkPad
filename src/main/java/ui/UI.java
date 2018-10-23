@@ -75,8 +75,7 @@ public class UI extends Application implements Initializable {
             stage.setScene(scene);
             loadConfig();
             loadDrawers();
-
-
+			
             if (!receivedPath.equals("")) {
                 JMPTab tab = new JMPTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
                         tabPane);
@@ -93,11 +92,12 @@ public class UI extends Application implements Initializable {
                     tabPane.getTabs().add(tab);
                 }
             }
-
+			
             refreshTheme();
+			
             stage.show();
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -386,12 +386,6 @@ public class UI extends Application implements Initializable {
         System.exit(0);
     }
 
-    public static void main(String[] args) {
-        if (args.length > 0) {
-            receivedPath = args[0];
-        }
-        launch(args);
-    }
 
     public void refreshTheme() {
         decorator.setStyle("-fx-decorator-color: " + primaryColor);

@@ -5,9 +5,6 @@ apply plugin: 'java'
 apply plugin: 'idea'
 
 buildscript {
-    dependencies {
-        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
-    }
     repositories {
         mavenLocal()
         mavenCentral()
@@ -19,16 +16,33 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
 
+dependencies {
+	compile "org.openjfx:javafx-base:11:${platform}"
+	compile "org.openjfx:javafx-fxml:11:${platform}"
+	compile "org.openjfx:javafx-web:11:${platform}"
+	compile "org.openjfx:javafx-media:11:${platform}"
+    compile "org.openjfx:javafx-graphics:11:${platform}"
+	compile "org.openjfx:javafx-controls:11:${platform}"
+
+		
     // Use JUnit test framework
     testCompile 'junit:junit:4.12'
 
     // https://mvnrepository.com/artifact/com.jfoenix/jfoenix
-    compile group: 'com.jfoenix', name: 'jfoenix', version: '8.0.5'
+    compile group: 'com.jfoenix', name: 'jfoenix', version: '9.0.6'
 
     // https://mvnrepository.com/artifact/com.vladsch.flexmark/flexmark
-    compile group: 'com.vladsch.flexmark', name: 'flexmark', version: '0.34.10'
+    compile group: 'com.vladsch.flexmark', name: 'flexmark', version: '0.34.53'
 
 
 }
@@ -49,19 +63,9 @@ jar {
     manifest {
         attributes(
                 'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-                'Main-class': 'ui.UI'
+                'Main-class': 'ui.Main'
         )
     }
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     baseName = project.name
-}
-apply plugin: 'javafx-gradle-plugin'
-
-jfx {
-    deployDir = "src/main/deploy"
-    // minimal requirement for jfxJar-task
-    mainClass = 'ui.UI'
-
-    // minimal requirement for jfxNative-task
-    vendor = 'Mayuso'
 }
