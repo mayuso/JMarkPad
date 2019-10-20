@@ -31,6 +31,7 @@ public class JMPTab extends Tab {
         splitPane = new SplitPane();
         setTextArea(new JFXTextArea());
         setWebView(new WebView());
+        
 
         setOnCloseRequest(e -> checkIfUserWantsToSaveFile());
         createTabButton();
@@ -176,6 +177,11 @@ public class JMPTab extends Tab {
             webView.getEngine().loadContent(Utilities.reparse(textArea.getText()), "text/html");
             setSaved(false);
         });
+        if(this.webView != null)
+        {
+            this.webView.getEngine().loadContent(Utilities.reparse(textArea.getText()), "text/html");
+        }
+		
         if (splitPane.getItems().size() > 1) {
             splitPane.getItems().remove(0);
         }
