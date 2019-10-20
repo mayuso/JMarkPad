@@ -259,7 +259,6 @@ public class UI extends Application implements Initializable {
         JMPTab examplesTab = new JMPTab("Examples", tabPane);
         JFXTextArea textArea = new JFXTextArea();
         examplesTab.setTextArea(textArea);
-
         tabPane.getTabs().add(examplesTab);
         tabPane.getSelectionModel().select(examplesTab);
         textArea.setText("# Title 1\n\n" +
@@ -273,6 +272,7 @@ public class UI extends Application implements Initializable {
 
                 "**bold**\n\n" +
                 "*italics*\n\n");
+		examplesTab.setSaved(true);
     }
 
     @FXML

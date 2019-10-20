@@ -208,7 +208,7 @@ public class JMPTab extends Tab {
     }
 
     @SuppressWarnings("unused")
-    private void setSaved(boolean isSaved) {
+    public void setSaved(boolean isSaved) {
         this.isSaved = isSaved;
         if (isSaved) {
             setText(getText().replace(" (*)", ""));
