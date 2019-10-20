@@ -97,8 +97,8 @@ public class UI extends Application implements Initializable {
 			
             stage.show();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
