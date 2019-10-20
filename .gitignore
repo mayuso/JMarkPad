@@ -28,12 +28,8 @@ proguard/
 *.iws
 .idea/
 
-# Gradle
-.gradletasknamecache
-.gradle/
-build/
-bin/
-out/
+# Maven
+target/
 
 # JMarkPad Preference
 jmarkpad.properties
