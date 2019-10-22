@@ -256,7 +256,7 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void markDownHelpClicked(ActionEvent ae) {
-        JMPTab examplesTab = new JMPTab("Examples", tabPane);
+        JMPTab examplesTab = new JMPTab("Markdown Help", tabPane);
         JFXTextArea textArea = new JFXTextArea();
         examplesTab.setTextArea(textArea);
         tabPane.getTabs().add(examplesTab);
@@ -284,7 +284,7 @@ public class UI extends Application implements Initializable {
 
         String body = "Why?\n" +
                 "I created JMarkPad as a tool to experiment with JavaFX.\n" +
-                "I kept adding functionalities to it until somehow became a useful tool.\n\n" +
+                "I kept adding functionalities until it became a useful tool.\n\n" +
                 "Source code\n" +
                 "Find the full source code and additional in the following github repository\n" +
                 "https://github.com/mayuso/JMarkPad\n\n" +
