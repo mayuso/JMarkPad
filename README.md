@@ -30,4 +30,9 @@ We are constantly trying to improve JMarkPad, you can see the known bugs and pla
 * Download and install [OpenJDK 13](https://jdk.java.net/13/).
 * Download and install [Maven](https://maven.apache.org/download.cgi) (Latest version tested: 3.6.2).
 
-To run JMarkPad run `mvn clean javafx:run`
+* To run JMarkPad run `mvn clean javafx:run`
+
+* To create an executable package run `mvn clean compile package`
+
+The file will be located in `target/JMarkPad.jar`
+
