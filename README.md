@@ -32,5 +32,6 @@ We are constantly trying to improve JMarkPad, you can see the known bugs and pla
 
 * To run JMarkPad run `mvn clean javafx:run`
 * To create an executable package run `mvn clean compile package`
+
     The file will be located in `target/JMarkPad.jar`
 
