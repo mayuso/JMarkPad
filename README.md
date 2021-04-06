@@ -27,7 +27,7 @@ We are constantly trying to improve JMarkPad, you can see the known bugs and pla
 
 ### How to build
 
-1. Download and install [OpenJDK 13](https://jdk.java.net/13/).
+1. Download and install [OpenJDK 11](https://jdk.java.net/archive/) (Newer JDKs should also work, but haven't been tested).
 2. Download and install [Maven](https://maven.apache.org/download.cgi) (Latest version tested: 3.6.2).
 
 * To run JMarkPad run `mvn clean javafx:run`
