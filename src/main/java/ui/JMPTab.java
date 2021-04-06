@@ -137,7 +137,7 @@ public class JMPTab extends Tab {
             properties.load(new FileInputStream("jmarkpad.properties"));
             String folderPath = properties.getProperty("folderPath");
 
-            if (folderPath != null) {
+            if (folderPath != null && !folderPath.isEmpty()) {
                 fc.setInitialDirectory(new File(folderPath));
             }
 
@@ -145,7 +145,7 @@ public class JMPTab extends Tab {
             save(file);
 
             folderPath = file.getParent();
-            properties.setProperty("folderPath", String.valueOf(folderPath));
+            properties.setProperty("folderPath", String.valueOf(file.getParent()));
             properties.store(new FileOutputStream("jmarkpad.properties"), null);
 
         } catch (Exception e) {

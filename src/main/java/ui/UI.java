@@ -197,6 +197,10 @@ public class UI extends Application implements Initializable {
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
 
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("jmarkpad.properties"));
+            String folderPath = properties.getProperty("folderPath");
+
             if (folderPath != null && !folderPath.isEmpty()) {
                 fc.setInitialDirectory(new File(folderPath));
             }
@@ -212,6 +216,8 @@ public class UI extends Application implements Initializable {
 
                     tabPane.getTabs().add(tab);
                     tabPane.getSelectionModel().select(tab);
+                    properties.setProperty("folderPath", String.valueOf(folderPath));
+                    properties.store(new FileOutputStream("jmarkpad.properties"), null);
                 }
             }
         } catch (Exception e) {
