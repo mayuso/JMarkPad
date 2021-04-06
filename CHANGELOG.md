@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 
 ## [1.1] - 23-08-2018
 ### Added
-- Changed "config.xml" to "jmarkpad.properties". (JMarkPad no longer user XML files)
+- Changed "config.xml" to "jmarkpad.properties" (JMarkPad no longer uses XML files).
 - JMarkPad will now remember the last directory you worked in and open it by default the next time you are searching for your documents.
 - Unique changelog file
 

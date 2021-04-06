@@ -12,6 +12,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utilities.Utilities;
+import utilities.HyperLinkRedirectListener;
 
 import java.io.*;
 import java.util.Properties;
@@ -31,6 +32,7 @@ public class JMPTab extends Tab {
         splitPane = new SplitPane();
         setTextArea(new JFXTextArea());
         setWebView(new WebView());
+        
 
         setOnCloseRequest(e -> checkIfUserWantsToSaveFile());
         createTabButton();
@@ -44,6 +46,7 @@ public class JMPTab extends Tab {
             }
             tabPane.getTabs().remove(this);
         });
+        webView.getEngine().getLoadWorker().stateProperty().addListener(new HyperLinkRedirectListener(webView));
     }
 
     private void createTabButton() {
@@ -136,7 +139,7 @@ public class JMPTab extends Tab {
             properties.load(new FileInputStream("jmarkpad.properties"));
             String folderPath = properties.getProperty("folderPath");
 
-            if (folderPath != null) {
+            if (folderPath != null && !folderPath.isEmpty()) {
                 fc.setInitialDirectory(new File(folderPath));
             }
 
@@ -144,7 +147,7 @@ public class JMPTab extends Tab {
             save(file);
 
             folderPath = file.getParent();
-            properties.setProperty("folderPath", String.valueOf(folderPath));
+            properties.setProperty("folderPath", String.valueOf(file.getParent()));
             properties.store(new FileOutputStream("jmarkpad.properties"), null);
 
         } catch (Exception e) {
@@ -176,6 +179,11 @@ public class JMPTab extends Tab {
             webView.getEngine().loadContent(Utilities.reparse(textArea.getText()), "text/html");
             setSaved(false);
         });
+        if(this.webView != null)
+        {
+            this.webView.getEngine().loadContent(Utilities.reparse(textArea.getText()), "text/html");
+        }
+		
         if (splitPane.getItems().size() > 1) {
             splitPane.getItems().remove(0);
         }
@@ -208,7 +216,7 @@ public class JMPTab extends Tab {
     }
 
     @SuppressWarnings("unused")
-    private void setSaved(boolean isSaved) {
+    public void setSaved(boolean isSaved) {
         this.isSaved = isSaved;
         if (isSaved) {
             setText(getText().replace(" (*)", ""));

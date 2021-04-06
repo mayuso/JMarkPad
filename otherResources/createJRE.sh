@@ -1,0 +1,1 @@
+jlink --module-path "C:\Program Files\Java\jdk-11\jmods" --add-modules java.base,java.scripting,java.datatransfer,java.desktop,java.prefs --output jre-11 --strip-debug --compress 2 --no-header-files --no-man-pages

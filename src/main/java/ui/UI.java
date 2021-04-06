@@ -75,8 +75,7 @@ public class UI extends Application implements Initializable {
             stage.setScene(scene);
             loadConfig();
             loadDrawers();
-
-
+			
             if (!receivedPath.equals("")) {
                 JMPTab tab = new JMPTab(receivedPath.split("\\\\")[receivedPath.split("\\\\").length - 1],
                         tabPane);
@@ -93,12 +92,13 @@ public class UI extends Application implements Initializable {
                     tabPane.getTabs().add(tab);
                 }
             }
-
+			
             refreshTheme();
+			
             stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
     }
 
@@ -197,6 +197,10 @@ public class UI extends Application implements Initializable {
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
             fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Markdown files (*.md)", "*.md"));
 
+            Properties properties = new Properties();
+            properties.load(new FileInputStream("jmarkpad.properties"));
+            String folderPath = properties.getProperty("folderPath");
+
             if (folderPath != null && !folderPath.isEmpty()) {
                 fc.setInitialDirectory(new File(folderPath));
             }
@@ -212,6 +216,8 @@ public class UI extends Application implements Initializable {
 
                     tabPane.getTabs().add(tab);
                     tabPane.getSelectionModel().select(tab);
+                    properties.setProperty("folderPath", String.valueOf(folderPath));
+                    properties.store(new FileOutputStream("jmarkpad.properties"), null);
                 }
             }
         } catch (Exception e) {
@@ -256,10 +262,9 @@ public class UI extends Application implements Initializable {
 
     @FXML
     public void markDownHelpClicked(ActionEvent ae) {
-        JMPTab examplesTab = new JMPTab("Examples", tabPane);
+        JMPTab examplesTab = new JMPTab("Markdown Help", tabPane);
         JFXTextArea textArea = new JFXTextArea();
         examplesTab.setTextArea(textArea);
-
         tabPane.getTabs().add(examplesTab);
         tabPane.getSelectionModel().select(examplesTab);
         textArea.setText("# Title 1\n\n" +
@@ -273,6 +278,7 @@ public class UI extends Application implements Initializable {
 
                 "**bold**\n\n" +
                 "*italics*\n\n");
+		examplesTab.setSaved(true);
     }
 
     @FXML
@@ -284,7 +290,7 @@ public class UI extends Application implements Initializable {
 
         String body = "Why?\n" +
                 "I created JMarkPad as a tool to experiment with JavaFX.\n" +
-                "I kept adding functionalities to it until somehow became a useful tool.\n\n" +
+                "I kept adding functionalities until it became a useful tool.\n\n" +
                 "Source code\n" +
                 "Find the full source code and additional in the following github repository\n" +
                 "https://github.com/mayuso/JMarkPad\n\n" +
@@ -386,12 +392,6 @@ public class UI extends Application implements Initializable {
         System.exit(0);
     }
 
-    public static void main(String[] args) {
-        if (args.length > 0) {
-            receivedPath = args[0];
-        }
-        launch(args);
-    }
 
     public void refreshTheme() {
         decorator.setStyle("-fx-decorator-color: " + primaryColor);
