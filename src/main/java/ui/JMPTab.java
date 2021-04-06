@@ -12,6 +12,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import utilities.Utilities;
+import utilities.HyperLinkRedirectListener;
 
 import java.io.*;
 import java.util.Properties;
@@ -45,6 +46,7 @@ public class JMPTab extends Tab {
             }
             tabPane.getTabs().remove(this);
         });
+        webView.getEngine().getLoadWorker().stateProperty().addListener(new HyperLinkRedirectListener(webView));
     }
 
     private void createTabButton() {
