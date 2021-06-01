@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="gridPane" stylesheets="@../../css/JMarkPad.css" xmlns="http://javafx.com/javafx/13.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane fx:id="gridPane" stylesheets="@../../css/JMarkPad.css" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
       <ColumnConstraints halignment="CENTER" prefWidth="150.0" />
   </columnConstraints>
