@@ -10,8 +10,8 @@ JMarkPad is a minimalistic text editor that shows a real-time preview of how you
 
 To use JMarkPad you only need to download and double click on the executable:
 
-* Download "JMarkPad.jar" if you already have Java 8 installed.
-* Download "JMarkPad.zip" if you don't have Java 8 installed. 
+* Download "JMarkPad.jar" if you already have Java installed.
+* Download "JMarkPad.zip" if you don't have Java installed. 
 
 [Download the latest version here](https://github.com/mayuso/JMarkPad/releases)
 
