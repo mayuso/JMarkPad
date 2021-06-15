@@ -1,9 +1,0 @@
-language: java
-
-jdk:
-  - openjdk16
-
-notifications:
-  slack:
-    on_success: never
-    on_failure: always
