@@ -10,7 +10,7 @@ JMarkPad is a minimalistic text editor that shows a real-time preview of how you
 
 To use JMarkPad you only need to download and double click on the executable:
 
-* Download "JMarkPad.jar" if you already have Java installed.
+* Download "JMarkPad_win.jar" or "JMarkPad_linux.jar" if you already have Java installed.
 * Download "JMarkPad.zip" if you don't have Java installed. 
 
 [Download the latest version here](https://github.com/mayuso/JMarkPad/releases)
@@ -25,8 +25,8 @@ We are constantly trying to improve JMarkPad, you can see the known bugs and pla
 
 Latest versions tested:
 
-1. JDK 16.0.1
-2. Apache Maven 3.8.1
+1. JDK 17
+2. Apache Maven 3.8.3
 
 * To run JMarkPad run `mvn clean javafx:run`
 * To create an executable package run `mvn clean compile package`
