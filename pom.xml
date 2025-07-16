@@ -5,7 +5,7 @@
 	<groupId>org.mayuso</groupId>
 	<artifactId>JMarkPad</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2.2</version>
+	<version>1.2.3</version>
 	<name>JMarkPad</name>
 
 	<properties>
@@ -36,12 +36,12 @@
 		<dependency>
 			<groupId>com.vladsch.flexmark</groupId>
 			<artifactId>flexmark</artifactId>
-			<version>0.62.2</version>
+			<version>0.64.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.vladsch.flexmark</groupId>
 			<artifactId>flexmark-util</artifactId>
-			<version>0.62.2</version>
+			<version>0.64.8</version>
 		</dependency>
 	</dependencies>
 	<build>

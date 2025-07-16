@@ -25,8 +25,8 @@ We are constantly trying to improve JMarkPad, you can see the known bugs and pla
 
 Latest versions tested:
 
-1. JDK 17
-2. Apache Maven 3.8.3
+1. JDK 24
+2. Apache Maven 3.9.11
 
 * To run JMarkPad run `mvn clean javafx:run`
 * To create an executable package run `mvn clean compile package`
